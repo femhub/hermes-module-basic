@@ -27,8 +27,8 @@ Dirichlet with piecewise-constant values (u = const)
 Neumann with piecewise-constant normal derivatives (du/dn = const)
 Newton with piecewise-constant parameters (const_1 u + du/dn = const_2)
 
-Building the Module
--------------------
+Build the Module
+----------------
 
 In the root directory of this module, type::
 
