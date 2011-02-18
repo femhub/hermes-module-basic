@@ -34,14 +34,14 @@ bool find_index(const std::vector<int> &array, int x, int &i_out)
 // Constructor.
 ModuleBasic::ModuleBasic()
 {
-  init_ref_num = -1;
-  init_p = -1;
-  mesh = new Mesh();
-  space = NULL;
-  sln = new Solution();
-  wf = NULL;
-  assembly_time = 0;
-  solver_time = 0;
+  this->init_ref_num = -1;
+  this->init_p = -1;
+  this->mesh = new Mesh();
+  this->space = NULL;
+  this->sln = new Solution();
+  this->wf = NULL;
+  this->assembly_time = 0;
+  this->solver_time = 0;
 
   // FIXME: these global arrays need to be removed.
   _global_bc_types = &(this->bc_types);
@@ -57,9 +57,32 @@ ModuleBasic::~ModuleBasic()
 
 // Set mesh via a string. 
 // See basic.h for an example of such a string.
-void ModuleBasic::set_mesh_str(const std::string &mesh)
+// TODO: Add more tests for correctness of the mesh.
+bool ModuleBasic::set_mesh_str(const std::string &mesh_str)
 {
-    this->mesh_str = mesh;
+  this->mesh_str = mesh_str;
+
+  // Load the mesh.
+  H2DReader mloader;
+  mloader.load_str(this->get_mesh_string(), this->mesh);
+
+  // Check whether the number of base elements is greater than zero.
+  if (this->get_num_base_elements() <= 0) {
+    info("No elements found in mesh");
+    return false;
+  };
+
+  // Clear the mesh string.
+  this->clear_mesh_string();
+
+  // Debug.
+  /*
+  MeshView m("", 0, 0, 400, 400);
+  m.show(this->mesh);
+  View::wait();
+  */
+  
+  return true;
 }
 
 // Set the number of initial uniform mesh refinements.
@@ -246,6 +269,13 @@ void ModuleBasic::get_space(H1Space* s)
   s->dup(this->space->get_mesh());
 }
 
+// Get number of elements in base mesh.
+int ModuleBasic::get_num_base_elements() 
+{
+  return this->mesh->get_num_base_elements();
+}
+
+
 // Set matrix solver.
 void ModuleBasic::set_matrix_solver(std::string solver_name)
 {
@@ -253,11 +283,12 @@ void ModuleBasic::set_matrix_solver(std::string solver_name)
   if (solver_name == "amesos" ) {this->matrix_solver = SOLVER_AMESOS;  found = true;}
   if (solver_name == "aztecoo") {this->matrix_solver = SOLVER_AZTECOO; found = true;}
   if (solver_name == "mumps"  ) {this->matrix_solver = SOLVER_MUMPS;   found = true;}
+  if (solver_name == "pardiso") {this->matrix_solver = SOLVER_PARDISO; found = true;}
   if (solver_name == "petsc"  ) {this->matrix_solver = SOLVER_PETSC;   found = true;}
   if (solver_name == "superlu") {this->matrix_solver = SOLVER_SUPERLU; found = true;}
   if (solver_name == "umfpack") {this->matrix_solver = SOLVER_UMFPACK; found = true;}
   if (!found) {
-    warn("Possible matrix solvers: amesos, aztecoo, mumps, petsc, superlu, umfpack.");
+    warn("Possible matrix solvers: amesos, aztecoo, mumps, pardiso, petsc, superlu, umfpack.");
     error("Unknown matrix solver %s.", solver_name.c_str());
   }
 }
@@ -277,7 +308,7 @@ double ModuleBasic::get_solver_time()
   return this->solver_time;
 }
 
-void ModuleBasic::create_mesh_space_forms() 
+bool ModuleBasic::create_space_and_forms() 
 {
   /* SANITY CHECKS */
 
@@ -287,21 +318,13 @@ void ModuleBasic::create_mesh_space_forms()
   // Sanity check of material markers and material constants.
   this->materials_sanity_check();
 
+  // Check whether the number of base elements is greater than zero.
+  if (this->get_num_base_elements() <= 0) {
+    info("No elements found in mesh");
+    return false;
+  };
+
   /* BEGIN THE COMPUTATION */
-
-  // Load the mesh.
-  H2DReader mloader;
-  mloader.load_str(this->get_mesh_string(), this->mesh);
-
-  // Clear the mesh string.
-  this->clear_mesh_string();
-
-  // Debug.
-  /*
-  MeshView m("", 0, 0, 400, 400);
-  m.show(this->mesh);
-  View::wait();
-  */
 
   // Perform initial uniform mesh refinements.
   for (int i = 0; i < this->init_ref_num; i++) this->mesh->refine_all_elements();
@@ -310,6 +333,7 @@ void ModuleBasic::create_mesh_space_forms()
   this->space = new H1Space(this->mesh, &(this->bc_types), &(this->bc_values), this->init_p);
   int ndof = Space::get_num_dofs(this->space);
   info("ndof = %d", ndof);
+  if (ndof <= 0) return false;
 
   // Debug.
   /*
@@ -329,6 +353,8 @@ void ModuleBasic::create_mesh_space_forms()
     this->wf->add_matrix_form_surf(callback(bilinear_form_surf_newton), this->bdy_markers_newton[i]);
     this->wf->add_vector_form_surf(callback(linear_form_surf_newton), this->bdy_markers_newton[i]);
   }
+
+  return true;
 }
 
 // Solve the problem.
@@ -340,7 +366,8 @@ bool ModuleBasic::calculate()
 
   // Perform basic sanity checks, create mesh, perform 
   // uniform refinements, create space, register weak forms.
-  this->create_mesh_space_forms();
+  bool mesh_ok = this->create_space_and_forms();
+  if (!mesh_ok) return false;
 
   // Initialize the FE problem.
   bool is_linear = true;

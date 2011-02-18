@@ -18,7 +18,7 @@
 //      c2 ... equation parameter, element-wise constant
 //      c3 ... equation parameter, element-wise constant
 //      c4 ... equation parameter, element-wise constant
-//      c5 ... equation parameter, element-wise constant
+//      c2 ... equation parameter, element-wise constant
 //
 // Possible BC: Dirichlet with piecewise-constant values (u = const)
 //              Neumann with piecewise-constant normal derivatives (du/dn = const)
@@ -37,7 +37,7 @@ public:
   ~ModuleBasic();
 
   // Set mesh as a string (see example at the end of this file).
-  void set_mesh_str(const std::string &mesh);
+  bool set_mesh_str(const std::string &mesh_str);
 
   // Set number of initial unifrm mesh refinements.
   void set_initial_mesh_refinement(int init_ref_num);
@@ -120,13 +120,16 @@ public:
 
   // Perform basic sanity checks, create mesh, perform 
   // uniform refinements, create space, register weak forms.
-  void create_mesh_space_forms();
+  bool create_space_and_forms();
 
   // Get assembly time.
   double get_assembly_time();
 
   // Get solver time.
   double get_solver_time();
+
+  // Get number of base elements.
+  int get_num_base_elements();
 
 
 protected:
@@ -155,8 +158,9 @@ protected:
                                                // Therefore we introduce a bc_permut array that for any 
                                                // boundary marker gives its index in the list of boundary 
                                                // conditions. 
-  MatrixSolverType matrix_solver;              // Possibilities: SOLVER_AMESOS, SOLVER_ZATECOO, SOLVER_MUMPS, 
-                                               // SOLVER_PETSC, SOLVER_SUPERLU, SOLVER_UMFPACK.
+  MatrixSolverType matrix_solver;              // Possibilities: SOLVER_AMESOS, SOLVER_ZATECOO, 
+                                               // SOLVER_MUMPS, SOLVER_PARDISO, SOLVER_PETSC, 
+                                               // SOLVER_SUPERLU, SOLVER_UMFPACK.
 
   // Finite element mesh.
   Mesh* mesh;
