@@ -18,7 +18,7 @@
 //      c2 ... equation parameter, element-wise constant
 //      c3 ... equation parameter, element-wise constant
 //      c4 ... equation parameter, element-wise constant
-//      c2 ... equation parameter, element-wise constant
+//      c5 ... equation parameter, element-wise constant
 //
 // Possible BC: Dirichlet with piecewise-constant values (u = const)
 //              Neumann with piecewise-constant normal derivatives (du/dn = const)
