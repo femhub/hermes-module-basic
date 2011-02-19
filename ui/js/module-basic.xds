@@ -1,0 +1,906 @@
+{
+	"name": "module-basic.xds",
+	"projectId": "DC5C074D-174F-4549-9660-3FB769BBA8C8",
+	"settings": {
+		"urlPrefix": "http://localhost/",
+		"spacesToIndent": 4,
+		"codeGenFormat": "Class",
+		"extPath": "http://extjs.cachefly.net/ext-3.2.1/",
+		"exportPath": ".",
+		"lineEnding": "LF",
+		"instantiateStore": true,
+		"exportXDSFiles": true,
+		"genTimestamps": true
+	},
+	"xdsVersion": "xds-1.0.3.1",
+	"components": [
+		{
+			"id": "MyWindow",
+			"cid": "window",
+			"jsClass": "FEMhub.ModuleBasicWindow",
+			"snapToGrid": 10,
+			"userConfig": {
+				"title": "Module Basic",
+				"width": 870,
+				"height": 580,
+				"layout": "fit",
+				"boxMinHeight": 580,
+				"boxMinWidth": 880
+			},
+			"cn": [
+				{
+					"id": "MyTabPanel",
+					"cid": "tabpanel",
+					"jsClass": "MyTabPanel",
+					"snapToGrid": 10,
+					"userConfig": {
+						"activeTab": 0,
+						"title": "",
+						"autoRef": "main_tabs",
+						"id": "main_tabs",
+						"forceLayout": "-ext-undefined-",
+						"draggable": "-ext-undefined-",
+						"plain": "-ext-undefined-",
+						"tabPosition": "-ext-undefined-",
+						"enableTabScroll": "-ext-undefined-"
+					},
+					"cn": [
+						{
+							"id": "MyPanel",
+							"cid": "panel",
+							"jsClass": "MyPanel",
+							"snapToGrid": 10,
+							"userConfig": {
+								"title": "Geometry",
+								"forceLayout": "-ext-undefined-",
+								"layout": "fit",
+								"tpl": "",
+								"html": "",
+								"autoRef": "geometry_tab",
+								"id": "geometry_tab"
+							},
+							"cn": [
+								{
+									"id": "MyToolbar",
+									"cid": "toolbar",
+									"jsClass": "MyToolbar2",
+									"dock": "tbar",
+									"snapToGrid": 10,
+									"cn": [
+										{
+											"id": "MyButton",
+											"cid": "button",
+											"jsClass": "MyButton1",
+											"snapToGrid": 10,
+											"userConfig": {
+												"text": "Operate on Nodes",
+												"autoRef": "nodes_button"
+											}
+										},
+										{
+											"id": "MySeparator",
+											"cid": "tbseparator",
+											"jsClass": "MySeparator3",
+											"snapToGrid": 10
+										},
+										{
+											"id": "MyButton1",
+											"cid": "button",
+											"jsClass": "MyButton3",
+											"snapToGrid": 10,
+											"userConfig": {
+												"text": "Operate on Edges"
+											}
+										},
+										{
+											"id": "MySeparator1",
+											"cid": "tbseparator",
+											"jsClass": "MySeparator4",
+											"snapToGrid": 10
+										},
+										{
+											"id": "MyButton2",
+											"cid": "button",
+											"jsClass": "MyButton2",
+											"snapToGrid": 10,
+											"userConfig": {
+												"text": "Operate on Subdomains"
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "MyPanel1",
+							"cid": "panel",
+							"jsClass": "MyPanel1",
+							"snapToGrid": 10,
+							"userConfig": {
+								"title": "Model",
+								"layout": "border",
+								"autoRef": "model_tab",
+								"id": "model_tab"
+							},
+							"cn": [
+								{
+									"id": "MyToolbar1",
+									"cid": "toolbar",
+									"jsClass": "MyToolbar",
+									"dock": "tbar",
+									"snapToGrid": 10,
+									"cn": [
+										{
+											"id": "MyButton3",
+											"cid": "button",
+											"jsClass": "MyButton4",
+											"snapToGrid": 10,
+											"userConfig": {
+												"text": "Boundary Conditions",
+												"enableToggle": "-ext-undefined-",
+												"clickEvent": "-ext-undefined-",
+												"allowDepress": "-ext-undefined-",
+												"pressed": "-ext-undefined-",
+												"autoShow": "-ext-undefined-"
+											},
+											"cn": [
+												{
+													"id": "MyMenu",
+													"cid": "menu",
+													"jsClass": "MyMenu",
+													"dock": "menu",
+													"snapToGrid": 10,
+													"cn": [
+														{
+															"id": "MyMenuItem",
+															"cid": "menuitem",
+															"jsClass": "MyMenuItem",
+															"snapToGrid": 10,
+															"userConfig": {
+																"text": "Add new..."
+															},
+															"cn": [
+																{
+																	"id": "MyMenu1",
+																	"cid": "menu",
+																	"jsClass": "MyMenu2",
+																	"dock": "menu",
+																	"snapToGrid": 10,
+																	"cn": [
+																		{
+																			"id": "MyMenuItem1",
+																			"cid": "menuitem",
+																			"jsClass": "MyMenuItem2",
+																			"snapToGrid": 10,
+																			"userConfig": {
+																				"text": "Dirichlet"
+																			},
+																			"cn": [
+																				{
+																					"id": "MyMenu3",
+																					"cid": "menu",
+																					"jsClass": "MyMenu3",
+																					"dock": "menu",
+																					"snapToGrid": 10,
+																					"cn": [
+																						{
+																							"id": "MyForm",
+																							"cid": "form",
+																							"jsClass": "MyForm",
+																							"snapToGrid": 10,
+																							"userConfig": {
+																								"title": "Enter Dirichlet Data",
+																								"autoRef": "dirichlet_bc_form"
+																							},
+																							"cn": [
+																								{
+																									"id": "MyNumberField3",
+																									"cid": "numberfield",
+																									"jsClass": "MyTextField1",
+																									"snapToGrid": 10,
+																									"userConfig": {
+																										"name": "Boundary Marker",
+																										"value": "",
+																										"allowBlank": "-ext-undefined-",
+																										"allowDecimals": false,
+																										"allowNegative": false,
+																										"autoRef": "dirichlet_bc_marker",
+																										"fieldLabel": "Boundary Marker",
+																										"anchor": "100%",
+																										"id": "dirichlet_bc_marker_id"
+																									}
+																								},
+																								{
+																									"id": "MyNumberField2",
+																									"cid": "numberfield",
+																									"jsClass": "MyTextField",
+																									"snapToGrid": 10,
+																									"userConfig": {
+																										"name": "Solution Value",
+																										"value": "",
+																										"decimalPrecision": 6,
+																										"autoRef": "dirichlet_bc_value",
+																										"fieldLabel": "Solution Value",
+																										"anchor": "100%",
+																										"id": "dirichlet_bc_value_id"
+																									}
+																								},
+																								{
+																									"id": "MyButton9",
+																									"cid": "button",
+																									"jsClass": "MyButton9",
+																									"snapToGrid": 10,
+																									"userConfig": {
+																										"text": "Save",
+																										"iconAlign": "right",
+																										"enableToggle": "-ext-undefined-",
+																										"allowDepress": "-ext-undefined-",
+																										"pressed": "-ext-undefined-",
+																										"autoRef": "dirichlet_save_button",
+																										"fieldLabel": "",
+																										"labelSeparator": "",
+																										"id": "dirichlet_save_button_id"
+																									}
+																								}
+																							]
+																						}
+																					]
+																				}
+																			]
+																		},
+																		{
+																			"id": "MyMenuItem2",
+																			"cid": "menuitem",
+																			"jsClass": "MyMenuItem3",
+																			"snapToGrid": 10,
+																			"userConfig": {
+																				"text": "Neumann"
+																			},
+																			"cn": [
+																				{
+																					"id": "MyMenu4",
+																					"cid": "menu",
+																					"jsClass": "MyMenu4",
+																					"dock": "menu",
+																					"snapToGrid": 10,
+																					"cn": [
+																						{
+																							"id": "MyForm1",
+																							"cid": "form",
+																							"jsClass": "MyForm1",
+																							"snapToGrid": 10,
+																							"userConfig": {
+																								"title": "Enter Neumann Data"
+																							},
+																							"cn": [
+																								{
+																									"id": "MyNumberField4",
+																									"cid": "numberfield",
+																									"jsClass": "MyNumberField4",
+																									"snapToGrid": 10,
+																									"userConfig": {
+																										"fieldLabel": "Boundary Marker",
+																										"anchor": "100%",
+																										"autoRef": "neumann_bc_marker",
+																										"name": "Boundary Marker",
+																										"allowDecimals": false,
+																										"allowNegative": false
+																									}
+																								},
+																								{
+																									"id": "MyNumberField5",
+																									"cid": "numberfield",
+																									"jsClass": "MyNumberField5",
+																									"snapToGrid": 10,
+																									"userConfig": {
+																										"autoRef": "neumann_bc_value",
+																										"decimalPrecision": 6,
+																										"name": "Solution Derivative",
+																										"fieldLabel": "Solution Derivative"
+																									}
+																								},
+																								{
+																									"id": "MyButton10",
+																									"cid": "button",
+																									"jsClass": "MyButton10",
+																									"snapToGrid": 10,
+																									"userConfig": {
+																										"text": "Save",
+																										"autoRef": "neumann_save_button"
+																									}
+																								}
+																							]
+																						}
+																					]
+																				}
+																			]
+																		},
+																		{
+																			"id": "MyMenuItem3",
+																			"cid": "menuitem",
+																			"jsClass": "MyMenuItem4",
+																			"snapToGrid": 10,
+																			"userConfig": {
+																				"text": "Newton"
+																			},
+																			"cn": [
+																				{
+																					"id": "MyMenu5",
+																					"cid": "menu",
+																					"jsClass": "MyMenu5",
+																					"dock": "menu",
+																					"snapToGrid": 10,
+																					"cn": [
+																						{
+																							"id": "MyForm2",
+																							"cid": "form",
+																							"jsClass": "MyForm2",
+																							"snapToGrid": 10,
+																							"userConfig": {
+																								"title": "Enter Newton Data"
+																							},
+																							"cn": [
+																								{
+																									"id": "MyNumberField6",
+																									"cid": "numberfield",
+																									"jsClass": "MyNumberField6",
+																									"snapToGrid": 10,
+																									"userConfig": {
+																										"fieldLabel": "Boundary Marker",
+																										"anchor": "100%",
+																										"name": "Boundary Marker",
+																										"autoRef": "newton_bc_marker",
+																										"allowDecimals": false,
+																										"allowNegative": false
+																									}
+																								},
+																								{
+																									"id": "MyNumberField8",
+																									"cid": "numberfield",
+																									"jsClass": "MyNumberField8",
+																									"snapToGrid": 10,
+																									"userConfig": {
+																										"fieldLabel": "Constant #1",
+																										"anchor": "100%",
+																										"name": "Constant #1",
+																										"autoRef": "newton_bc_value_1"
+																									}
+																								},
+																								{
+																									"id": "MyNumberField7",
+																									"cid": "numberfield",
+																									"jsClass": "MyNumberField7",
+																									"snapToGrid": 10,
+																									"userConfig": {
+																										"fieldLabel": "Constant #2",
+																										"anchor": "100%",
+																										"autoRef": "newton_bc_value_2",
+																										"name": "Constant #2"
+																									}
+																								},
+																								{
+																									"id": "MyButton11",
+																									"cid": "button",
+																									"jsClass": "MyButton11",
+																									"snapToGrid": 10,
+																									"userConfig": {
+																										"text": "Save",
+																										"autoRef": "newton_save_button"
+																									}
+																								}
+																							]
+																						}
+																					]
+																				}
+																			]
+																		}
+																	]
+																}
+															]
+														},
+														{
+															"id": "MyMenuItem4",
+															"cid": "menuitem",
+															"jsClass": "MyMenuItem5",
+															"snapToGrid": 10,
+															"userConfig": {
+																"text": "All boundary conditions:"
+															}
+														}
+													]
+												}
+											]
+										},
+										{
+											"id": "MySeparator2",
+											"cid": "tbseparator",
+											"jsClass": "MySeparator",
+											"snapToGrid": 10,
+											"userConfig": {
+												"width": "-ext-undefined-"
+											}
+										},
+										{
+											"id": "MyButton4",
+											"cid": "button",
+											"jsClass": "MyButton5",
+											"snapToGrid": 10,
+											"userConfig": {
+												"text": "Materials"
+											},
+											"cn": [
+												{
+													"id": "MyMenu2",
+													"cid": "menu",
+													"jsClass": "MyMenu1",
+													"dock": "menu",
+													"snapToGrid": 10,
+													"cn": [
+														{
+															"id": "MyMenuItem5",
+															"cid": "menuitem",
+															"jsClass": "MyMenuItem1",
+															"snapToGrid": 10,
+															"userConfig": {
+																"text": "Add new..."
+															}
+														},
+														{
+															"id": "MyMenuItem6",
+															"cid": "menuitem",
+															"jsClass": "MyMenuItem6",
+															"snapToGrid": 10,
+															"userConfig": {
+																"text": "All materials:"
+															}
+														}
+													]
+												}
+											]
+										},
+										{
+											"id": "MyFill",
+											"cid": "tbfill",
+											"jsClass": "MyFill1",
+											"snapToGrid": 10
+										}
+									]
+								},
+								{
+									"id": "MyPanel2",
+									"cid": "panel",
+									"jsClass": "MyPanel3",
+									"snapToGrid": 10,
+									"userConfig": {
+										"title": "-ext-undefined-",
+										"region": "center",
+										"autoRef": "",
+										"autoScroll": true
+									}
+								},
+								{
+									"id": "MyPanel3",
+									"cid": "panel",
+									"jsClass": "MyPanel4",
+									"snapToGrid": 10,
+									"userConfig": {
+										"title": "-ext-undefined-",
+										"region": "west",
+										"width": 142,
+										"autoRef": "model_parameters",
+										"autoScroll": true,
+										"split": true,
+										"collapsible": "-ext-undefined-"
+									}
+								}
+							]
+						},
+						{
+							"id": "MyPanel4",
+							"cid": "panel",
+							"jsClass": "MyTabPanel1",
+							"snapToGrid": 10,
+							"userConfig": {
+								"title": "Computation",
+								"autoRef": "computation_tab",
+								"id": "computation_tab",
+								"width": 770,
+								"layout": "border"
+							},
+							"cn": [
+								{
+									"id": "MyPanel5",
+									"cid": "panel",
+									"jsClass": "MyPanel4",
+									"snapToGrid": 10,
+									"userConfig": {
+										"title": "",
+										"autoRef": "computation_setup",
+										"id": "computation_setup",
+										"autoScroll": "-ext-undefined-",
+										"layout": "absolute",
+										"border": "-ext-undefined-",
+										"frame": "-ext-undefined-",
+										"headerAsText": "-ext-undefined-",
+										"padding": 10,
+										"shadow": "frame",
+										"shim": "-ext-undefined-",
+										"width": 180,
+										"height": 358,
+										"titleCollapse": "-ext-undefined-",
+										"itemId": "computation_setup",
+										"region": "west"
+									},
+									"cn": [
+										{
+											"id": "MyDisplayField",
+											"cid": "displayfield",
+											"jsClass": "MyDisplayField4",
+											"snapToGrid": 10,
+											"userConfig": {
+												"value": "",
+												"height": 5,
+												"width": 100
+											}
+										},
+										{
+											"id": "MyDisplayField1",
+											"cid": "displayfield",
+											"jsClass": "MyDisplayField",
+											"snapToGrid": 10,
+											"userConfig": {
+												"value": "Mesh refinements:",
+												"height": 20,
+												"width": 100,
+												"x": 10,
+												"y": 22
+											}
+										},
+										{
+											"id": "MyNumberField",
+											"cid": "numberfield",
+											"jsClass": "MyNumberField",
+											"snapToGrid": 10,
+											"userConfig": {
+												"autoRef": "Init_ref_num",
+												"value": 0,
+												"id": "Init_ref_num",
+												"x": 110,
+												"y": 20,
+												"width": 50,
+												"height": 20,
+												"maxValue": 10,
+												"allowDecimals": false,
+												"allowNegative": false
+											}
+										},
+										{
+											"id": "MyDisplayField2",
+											"cid": "displayfield",
+											"jsClass": "MyDisplayField1",
+											"snapToGrid": 10,
+											"userConfig": {
+												"value": "Polynomial degree:",
+												"height": 20,
+												"width": 100,
+												"x": 10,
+												"y": 62
+											}
+										},
+										{
+											"id": "MyNumberField1",
+											"cid": "numberfield",
+											"jsClass": "MyNumberField1",
+											"snapToGrid": 10,
+											"userConfig": {
+												"value": 4,
+												"autoRef": "Init_p",
+												"id": "Init_p",
+												"x": 110,
+												"y": 60,
+												"width": 50,
+												"height": 20,
+												"allowNegative": false,
+												"allowDecimals": false,
+												"maxValue": 9,
+												"minValue": 1
+											}
+										},
+										{
+											"id": "MyFieldSet",
+											"cid": "fieldset",
+											"jsClass": "MyFieldSet",
+											"snapToGrid": 10,
+											"userConfig": {
+												"title": "Matrix solver",
+												"height": 180,
+												"width": 150,
+												"layout": "auto",
+												"id": "ms_field_set",
+												"autoScroll": "-ext-undefined-",
+												"itemId": "ms_field_set",
+												"autoRef": "",
+												"x": 10,
+												"y": 100
+											},
+											"cn": [
+												{
+													"id": "MyRadio",
+													"cid": "radio",
+													"jsClass": "MyRadio",
+													"snapToGrid": 10,
+													"userConfig": {
+														"boxLabel": "Amesos",
+														"inputValue": "amesos",
+														"value": "amesos",
+														"autoRef": "Matrix_solver",
+														"id": "ms_radio_1",
+														"name": "ms_radio_group",
+														"stateful": "-ext-undefined-",
+														"itemId": "ms_radio_1"
+													}
+												},
+												{
+													"id": "MyRadio1",
+													"cid": "radio",
+													"jsClass": "MyRadio1",
+													"snapToGrid": 10,
+													"userConfig": {
+														"boxLabel": "AztecOO",
+														"id": "ms_radio_2",
+														"name": "ms_radio_group",
+														"value": "aztecoo",
+														"autoRef": "Matrix_solver",
+														"itemId": "ms_radio_2"
+													}
+												},
+												{
+													"id": "MyRadio2",
+													"cid": "radio",
+													"jsClass": "MyRadio6",
+													"snapToGrid": 10,
+													"userConfig": {
+														"boxLabel": "MUMPS",
+														"id": "ms_radio_3",
+														"name": "ms_radio_group",
+														"value": "mumps",
+														"autoRef": "Matrix_solver",
+														"itemId": "ms_radio_3"
+													}
+												},
+												{
+													"id": "MyRadio3",
+													"cid": "radio",
+													"jsClass": "MyRadio2",
+													"snapToGrid": 10,
+													"userConfig": {
+														"boxLabel": "Pardiso",
+														"id": "ms_radio_4",
+														"name": "ms_radio_group",
+														"value": "pardiso",
+														"autoRef": "Matrix_solver",
+														"itemId": "ms_radio_4"
+													}
+												},
+												{
+													"id": "MyRadio4",
+													"cid": "radio",
+													"jsClass": "MyRadio3",
+													"snapToGrid": 10,
+													"userConfig": {
+														"boxLabel": "PETSc",
+														"id": "ms_radio_5",
+														"name": "ms_radio_group",
+														"value": "petsc",
+														"autoRef": "Matrix_solver",
+														"itemId": "ms_radio_5"
+													}
+												},
+												{
+													"id": "MyRadio5",
+													"cid": "radio",
+													"jsClass": "MyRadio4",
+													"snapToGrid": 10,
+													"userConfig": {
+														"boxLabel": "SuperLU",
+														"id": "ms_radio_6",
+														"name": "ms_radio_group",
+														"value": "superlu",
+														"autoRef": "Matrix_solver",
+														"itemId": "ms_radio_6"
+													}
+												},
+												{
+													"id": "MyRadio6",
+													"cid": "radio",
+													"jsClass": "MyRadio5",
+													"snapToGrid": 10,
+													"userConfig": {
+														"boxLabel": "UMFpack",
+														"checked": true,
+														"id": "ms_radio_7",
+														"name": "ms_radio_group",
+														"value": "umfpack",
+														"autoRef": "Matrix_solver",
+														"itemId": "ms_radio_7"
+													}
+												}
+											]
+										},
+										{
+											"id": "MyButton5",
+											"cid": "button",
+											"jsClass": "MyButton",
+											"snapToGrid": 10,
+											"userConfig": {
+												"text": "Calculate",
+												"iconCls": "",
+												"cls": "",
+												"autoRef": "calculate_button",
+												"height": "-ext-undefined-",
+												"arrowAlign": "-ext-undefined-",
+												"iconAlign": "bottom",
+												"x": 110,
+												"y": 310
+											}
+										}
+									]
+								},
+								{
+									"id": "MyToolbar2",
+									"cid": "toolbar",
+									"jsClass": "MyToolbar2",
+									"dock": "bbar",
+									"snapToGrid": 10,
+									"userConfig": {
+										"height": 25,
+										"id": "status_bar",
+										"buttonAlign": "center"
+									}
+								},
+								{
+									"id": "MyContainer",
+									"cid": "container",
+									"jsClass": "MyContainer",
+									"snapToGrid": 10,
+									"userConfig": {
+										"region": "center",
+										"width": 100,
+										"layout": "border"
+									},
+									"cn": [
+										{
+											"id": "MyPanel7",
+											"cid": "panel",
+											"jsClass": "MyPanel8",
+											"snapToGrid": 10,
+											"userConfig": {
+												"title": "",
+												"layout": "absolute",
+												"id": "computation_result",
+												"height": 390,
+												"width": 100,
+												"itemId": "computation_result",
+												"autoScroll": true,
+												"padding": 10,
+												"region": "center",
+												"autoRef": "computation_result"
+											}
+										},
+										{
+											"id": "MyPanel6",
+											"cid": "panel",
+											"jsClass": "MyPanel7",
+											"snapToGrid": 10,
+											"userConfig": {
+												"title": "",
+												"height": 110,
+												"forceLayout": "-ext-undefined-",
+												"layout": "absolute",
+												"width": 100,
+												"titleCollapse": "-ext-undefined-",
+												"shim": false,
+												"id": "computation_log",
+												"itemId": "computation_log",
+												"autoScroll": true,
+												"padding": 10,
+												"region": "south",
+												"autoRef": "computation_log"
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"id": "MyPanel8",
+							"cid": "panel",
+							"jsClass": "MyPanel2",
+							"snapToGrid": 10,
+							"userConfig": {
+								"title": "Postprocessing",
+								"autoRef": "postprocessing_tab",
+								"id": "postprocessing_tab",
+								"layout": "fit"
+							},
+							"cn": [
+								{
+									"id": "MyToolbar3",
+									"cid": "toolbar",
+									"jsClass": "MyToolbar3",
+									"dock": "tbar",
+									"snapToGrid": 10,
+									"cn": [
+										{
+											"id": "MyButton6",
+											"cid": "button",
+											"jsClass": "MyButton11",
+											"snapToGrid": 10,
+											"userConfig": {
+												"text": "Point Values"
+											}
+										},
+										{
+											"id": "MySeparator3",
+											"cid": "tbseparator",
+											"jsClass": "MySeparator1",
+											"snapToGrid": 10
+										},
+										{
+											"id": "MyButton7",
+											"cid": "button",
+											"jsClass": "MyButton10",
+											"snapToGrid": 10,
+											"userConfig": {
+												"text": "Line Integrals"
+											}
+										},
+										{
+											"id": "MySeparator4",
+											"cid": "tbseparator",
+											"jsClass": "MySeparator2",
+											"snapToGrid": 10
+										},
+										{
+											"id": "MyButton8",
+											"cid": "button",
+											"jsClass": "MyButton6",
+											"snapToGrid": 10,
+											"userConfig": {
+												"text": "Volume Integrals"
+											}
+										}
+									]
+								},
+								{
+									"id": "MyPanel9",
+									"cid": "panel",
+									"jsClass": "MyPanel7",
+									"snapToGrid": 10,
+									"userConfig": {
+										"title": "",
+										"autoRef": "postprocessing_panel",
+										"layout": "fit",
+										"autoScroll": true
+									}
+								}
+							]
+						},
+						{
+							"id": "MyPanel10",
+							"cid": "panel",
+							"jsClass": "MyPanel10",
+							"snapToGrid": 10,
+							"userConfig": {
+								"title": "Help",
+								"autoRef": "help_tab",
+								"html": ""
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"stores": []
+}
