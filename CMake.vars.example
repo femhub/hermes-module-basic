@@ -1,0 +1,99 @@
+# This is a sample CMake.vars file for the Hermes module 'Basic'.
+#
+# It contains options that let you customize building the module on your 
+# system. Options set here override the default ones set in CMakeLists.txt.
+#
+# NOTE: when specifying paths, always use absolute paths (such as 
+# "/home/pavel/something" instead of "~/something").
+
+# Point to the directory where you installed the Hermes library.
+set(HERMES_ROOT /home/pavel/hermes)
+
+# Enable the C++ version of your module:
+set(WITH_CXX      YES)
+# Enable the module's Python wrapper. 
+set(WITH_PYTHON   YES)
+# If the required Python wrappers of the Hermes2D library have not been
+# found in the standard directories (${HERMES_ROOT}/lib/python/hermes2d, 
+# Python's system directory for modules and some others), you will have
+# to point to the directory containing the file   'hermes2d.pxd'   here
+#
+#   set(HERMES_PYTHON_WRAPPERS_DIR  <home directory of hermes2d.pxd>
+
+# Enable the JavaScript version of your module:
+set(WITH_UI       YES)
+
+# Enable UMFPACK (linear solver).
+# You may leave this commented out if you are using the Debian package 
+# (e.g installed via Synaptic). If you installed the .spkg file from the 
+# hpfem/solvers repository, uncomment the following line:
+#
+#   set(UMFPACK_ROOT /home/pavel/solvers/umfpack)
+
+# Enable MUMPS (linear solver).
+# 
+    set(MUMPS_ROOT /home/pavel/solvers/mumps)
+
+# Enable PETSc (linear solver).
+#
+    set(PETSC_ROOT /home/pavel/solvers/petsc)
+    set(PETSC_ARCH linux-cxx)
+
+# Enable SuperLU (linear solver)
+# You may leave this commented out if you are using the Debian package
+# (e.g installed via Synaptic).
+# If you installed the .spkg file from the hpfem/solvers repository, add
+#
+#   set(SUPERLU_ROOT /home/pavel/solvers/superlu)
+#
+# If you installed the multithreaded version, point SUPERLU_ROOT to its
+# directory and notify CMake:
+#
+#   set(SUPERLU_ROOT /home/pavel/solvers/superlu_mt)
+#   set(SUPERLU_MT   YES)
+#
+# If you selected OpenMP as the multithreading library during the 
+# installation, you must also add:
+#
+#   set(WITH_OPENMP  YES)
+
+# Enable Trilinos (linear and nonlinear solvers).
+#
+    set(TRILINOS_ROOT /opt/packages/trilinos)
+
+# Enable ExodusII and NetCDF (CUBIT mesh format support).
+#
+SET(EXODUSII_ROOT /opt/packages/exodusii)
+SET(NETCDF_ROOT /opt/packages/netcdf)
+
+#------------------------   INSTALLATION   --------------------------
+
+# Installation directory for Python wrappers.
+#
+# Files needed to be imported into your module's Python script will be
+# installed into 
+#   PYTHON_INSTALL_PATH/hermes_modules
+# upon executing 'make install' (or 'sudo make install').
+# PYTHON_INSTALL_PATH may be either set manually, or left blank. In
+# this case, the module wrapper will be installed into
+#   CMAKE_INSTALL_PREFIX/lib/python/hermes_modules
+# (this may be useful to keep the module in the same place as your 
+# Hermes wrappers, when installed with the same CMAKE_INSTALL_PREFIX).
+# You may specify the CMAKE_INSTALL_PREFIX by
+#
+#   set(CMAKE_INSTALL_PREFIX    /home/pavel/hermes)
+#
+# In both cases, you will probably have to point to these directories
+# at the beginning of your Python script, e.g.:
+#   import sys; sys.path.append("/home/pavel/hermes/lib/python")
+#
+# Alternatively, you may uncomment the following line to install the
+# module into the default place where Python stores its modules 
+#
+#  set(PYTHON_INSTALL_PATH   USE_SYSTEM_PYTHON_DIRECTORY)
+#
+# Execute the following command to see where the files will be 
+# installed in this case:
+#   python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"
+# You don't then need the 'import sys...' line in your Python script.  
+
