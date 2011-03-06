@@ -26,13 +26,15 @@ ENDIF(APPLE)
 
 # Python packages directory. 
 #
-IF("${PYTHON_INSTALL_PATH}" STREQUAL "USE_SYSTEM_PYTHON_DIRECTORY")  
-    # Use a system directory into which Python puts all the modules by default.
-    execute_process(
-        COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" 
-        OUTPUT_VARIABLE PYTHON_INSTALL_PATH 
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
+# Find the system directory into which Python puts all the modules by default.
+execute_process(
+    COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" 
+    OUTPUT_VARIABLE DEFAULT_PYTHON_INSTALL_PATH 
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+IF("${PYTHON_INSTALL_PATH}" STREQUAL "USE_SYSTEM_PYTHON_DIRECTORY")
+    set(PYTHON_INSTALL_PATH ${DEFAULT_PYTHON_INSTALL_PATH})
 ELSEIF(NOT PYTHON_INSTALL_PATH)
     # Use a local subdirectory of CMAKE_INSTALL_PREFIX.
     set(PYTHON_INSTALL_PATH lib/python)
