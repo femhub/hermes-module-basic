@@ -1,7 +1,7 @@
 # If you have installed the Hermes wrappers and the module wrapper into 
 # directories which are not on default Python path, you must point to them here:
 import sys
-sys.path.append("/home/milan/myhermes/lib/python")
+sys.path.append("/home/pavel/build/hermes/lib/python")
 
 from hermes2d.hermes2d import Linearizer
 from hermes2d.plot import sln2png
@@ -18,7 +18,9 @@ def main():
     e.set_mesh_str("\na = 1.0  # size of the mesh\nb = sqrt(2)/2\n\nvertices =\n{\n  { 0, -a },    # vertex 0\n  { a, -a },    # vertex 1\n  { -a, 0 },    # vertex 2\n  { 0, 0 },     # vertex 3\n  { a, 0 },     # vertex 4\n  { -a, a },    # vertex 5\n  { 0, a },     # vertex 6\n  { a*b, a*b }  # vertex 7\n}\n\nelements =\n{\n  { 0, 1, 4, 3, 0 },  # quad 0\n  { 3, 4, 7, 0 },     # tri 1\n  { 3, 7, 6, 0 },     # tri 2\n  { 2, 3, 6, 5, 0 }   # quad 3\n}\n\nboundaries =\n{\n  { 0, 1, 1 },\n  { 1, 4, 2 },\n  { 3, 0, 4 },\n  { 4, 7, 2 },\n  { 7, 6, 2 },\n  { 2, 3, 4 },\n  { 6, 5, 2 },\n  { 5, 2, 3 }\n}\n\ncurves =\n{\n  { 4, 7, 45 },  # +45 degree circular arcs\n  { 7, 6, 45 }\n}\n");
     e.set_initial_mesh_refinement(2)
     e.set_initial_poly_degree(4)
-    e.set_matrix_solver("umfpack")
+    solver_name = "umfpack"   # choose from amesos, aztecoo, mumps, petsc, superlu, umfpack
+    e.set_matrix_solver(solver_name) 
+    print "Matrix solver:", solver_name
     e.set_material_markers([0])
     e.set_c1_array([1])
     e.set_c2_array([0])

@@ -7,7 +7,7 @@
 # "/home/pavel/something" instead of "~/something").
 
 # Point to the directory where you installed the Hermes library.
-set(HERMES_ROOT /home/pavel/hermes)
+set(HERMES_ROOT /home/pavel/build/hermes)
 
 # Enable the C++ version of your module:
 set(WITH_CXX      YES)
@@ -21,7 +21,7 @@ set(WITH_PYTHON   YES)
 #   set(HERMES_PYTHON_WRAPPERS_DIR  <home directory of hermes2d.pxd>
 
 # Enable the JavaScript version of your module:
-set(WITH_UI       YES)
+set(WITH_UI       NO)
 
 # Enable UMFPACK (linear solver).
 # You may leave this commented out if you are using the Debian package 
@@ -81,11 +81,11 @@ SET(NETCDF_ROOT /opt/packages/netcdf)
 # Hermes wrappers, when installed with the same CMAKE_INSTALL_PREFIX).
 # You may specify the CMAKE_INSTALL_PREFIX by
 #
-#   set(CMAKE_INSTALL_PREFIX    /home/pavel/hermes)
+#   set(CMAKE_INSTALL_PREFIX    /home/pavel/build/hermes)
 #
 # In both cases, you will probably have to point to these directories
 # at the beginning of your Python script, e.g.:
-#   import sys; sys.path.append("/home/pavel/hermes/lib/python")
+#   import sys; sys.path.append("/home/pavel/build/hermes/lib/python")
 #
 # Alternatively, you may uncomment the following line to install the
 # module into the default place where Python stores its modules 
