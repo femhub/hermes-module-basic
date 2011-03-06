@@ -3,7 +3,7 @@ Hermes Module Basic
 
 This is a simple generic module for a linear second-order PDE based on the Hermes 
 library. The purpose of modules like this is to provide a higher-level API where 
-the user is not exposed to wesk forms, spaces, solver initialization, and other 
+the user is not exposed to weak forms, spaces, solver initialization, and other 
 technical details. The module Basic is an open source module whose purpose is to 
 illustrate how modules should be created.
 
