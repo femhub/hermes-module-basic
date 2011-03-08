@@ -15,7 +15,7 @@
 #     ./config/configure.py PETSC_ARCH=linux-cxx-real --with-clanguage=cxx
 #     make PETSC_DIR=/opt/petsc/petsc-3.1-p7 PETSC_ARCH=linux-cxx-real all
 #     ./config/configure.py PETSC_ARCH=linux-cxx-complex --with-clanguage=cxx --with-scalar-type=complex
-#     make PETSC_DIR=/opt/petsc/petsc-3.1-p7 PETSC_ARCH=linux-mpicxx-complex all 
+#     make PETSC_DIR=/opt/petsc/petsc-3.1-p7 PETSC_ARCH=linux-mpicxx-complex all
 #
 #   In hermes/CMake.vars:
 #     set(WITH_PETSC YES)
@@ -24,18 +24,18 @@
 #
 
 # You can specify your own version of the library instead of the one provided by
-# Femhub by specifying the environment variables MY_PETSC_LIB_DIRS and 
+# Femhub by specifying the environment variables MY_PETSC_LIB_DIRS and
 # MY_PETSC_INC_DIRS.
 IF ("$ENV{MY_PETSC_LIB_DIRS}" STREQUAL "" OR "$ENV{MY_PETSC_INC_DIRS}" STREQUAL "")
-  # When linking the library to stand-alone Hermes, you may also specify the 
+  # When linking the library to stand-alone Hermes, you may also specify the
   # variables directly in CMake.vars
   IF (NOT MY_PETSC_LIB_DIRS OR NOT MY_PETSC_INC_DIRS)
-    # Alternatively, you may simply specify PETSC_ROOT in CMake.vars. This is 
+    # Alternatively, you may simply specify PETSC_ROOT in CMake.vars. This is
     # the traditional way used also in the spkg files from the hpfem/solvers
     # repository and in the Hermes spkg.
     SET(MY_PETSC_LIB_DIRS ${PETSC_ROOT}/lib)
     SET(MY_PETSC_INC_DIRS ${PETSC_ROOT}/include)
-  ENDIF (NOT MY_PETSC_LIB_DIRS OR NOT MY_PETSC_INC_DIRS)  
+  ENDIF (NOT MY_PETSC_LIB_DIRS OR NOT MY_PETSC_INC_DIRS)
 ELSE ("$ENV{MY_PETSC_LIB_DIRS}" STREQUAL "" OR "$ENV{MY_PETSC_INC_DIRS}" STREQUAL "")
   SET(MY_PETSC_LIB_DIRS $ENV{MY_PETSC_LIB_DIRS})
   SET(MY_PETSC_INC_DIRS $ENV{MY_PETSC_INC_DIRS})
@@ -61,7 +61,7 @@ SET(PETSC_DIR ${MY_PETSC_LIB_DIRS}/${PETSC_ARCH})
 IF(EXISTS ${PETSC_DIR})
   FIND_LIBRARY(PETSC_LIBRARIES petsc ${PETSC_DIR}/lib NO_DEFAULT_PATH)
   FIND_LIBRARY(PETSC_LIBRARIES petsc)
-        
+
   IF(COMMON_PETSC_INCLUDE_DIR)
     # Add arch-specific include directory.
     SET(PETSC_INCLUDE_DIR ${COMMON_PETSC_INCLUDE_DIR} ${PETSC_DIR}/include)
@@ -71,14 +71,19 @@ IF(EXISTS ${PETSC_DIR})
   ENDIF(COMMON_PETSC_INCLUDE_DIR)
 
   # linux specific (?)
-  SET(PETSC_LIBRARIES ${PETSC_LIBRARIES} dl)     
-ENDIF(EXISTS ${PETSC_DIR})  
+  SET(PETSC_LIBRARIES ${PETSC_LIBRARIES} dl)
+ENDIF(EXISTS ${PETSC_DIR})
 
 INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(  PETSC 
-    "PETSc library could not be found. If your module requires to use its 
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(  PETSC
+    "PETSc library could not be found. If your module requires to use its
     support in Hermes, please install it according to instructions at
     <http://hpfem.org/hermes/doc/src/installation/matrix_solvers/petsc.html>\n"
     PETSC_LIBRARIES PETSC_INCLUDE_DIR
 )
-  
+
+IF (NOT PETSC_LIBRARIES)
+    set(PETSC_LIBRARIES      "")
+    set(PETSC_INCLUDE_DIR    "")
+ENDIF (NOT PETSC_LIBRARIES)
+

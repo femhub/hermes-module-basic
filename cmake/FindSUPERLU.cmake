@@ -3,13 +3,13 @@
 #
 
 # You can specify your own version of the library instead of the one provided by
-# Femhub by specifying the environment variables MY_SUPERLU_LIB_DIRS and 
+# Femhub by specifying the environment variables MY_SUPERLU_LIB_DIRS and
 # MY_SUPERLU_INC_DIRS.
 IF ("$ENV{MY_SUPERLU_LIB_DIRS}" STREQUAL "" OR "$ENV{MY_SUPERLU_INC_DIRS}" STREQUAL "")
-  # When linking the library to stand-alone Hermes, you may also specify the 
+  # When linking the library to stand-alone Hermes, you may also specify the
   # variables directly in CMake.vars
   IF (NOT MY_SUPERLU_LIB_DIRS OR NOT MY_SUPERLU_INC_DIRS)
-    # Alternatively, you may simply specify SUPERLU_ROOT in CMake.vars. This is 
+    # Alternatively, you may simply specify SUPERLU_ROOT in CMake.vars. This is
     # the traditional way used also in the spkg files from the hpfem/solvers
     # repository and in the Hermes spkg.
     SET(MY_SUPERLU_LIB_DIRS ${SUPERLU_ROOT}/lib)
@@ -18,7 +18,7 @@ IF ("$ENV{MY_SUPERLU_LIB_DIRS}" STREQUAL "" OR "$ENV{MY_SUPERLU_INC_DIRS}" STREQ
 ELSE ("$ENV{MY_SUPERLU_LIB_DIRS}" STREQUAL "" OR "$ENV{MY_SUPERLU_INC_DIRS}" STREQUAL "")
   SET(MY_SUPERLU_LIB_DIRS $ENV{MY_SUPERLU_LIB_DIRS})
   SET(MY_SUPERLU_INC_DIRS $ENV{MY_SUPERLU_INC_DIRS})
-ENDIF ("$ENV{MY_SUPERLU_LIB_DIRS}" STREQUAL "" OR "$ENV{MY_SUPERLU_INC_DIRS}" STREQUAL "") 
+ENDIF ("$ENV{MY_SUPERLU_LIB_DIRS}" STREQUAL "" OR "$ENV{MY_SUPERLU_INC_DIRS}" STREQUAL "")
 
 IF(SUPERLU_MT AND WITH_OPENMP)
   SET(POST _mt_OPENMP)
@@ -42,9 +42,15 @@ FIND_LIBRARY( SUPERLU_LIBRARY ${PRE}superlu${POST} ${MY_SUPERLU_LIB_DIRS} NO_DEF
 FIND_LIBRARY( SUPERLU_LIBRARY ${PRE}superlu${POST} /usr/lib /usr/lib/superlu /usr/local/lib/superlu)
 
 INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(  SUPERLU 
-    "SuperLU library not found. If your module requires its support in Hermes, 
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(  SUPERLU
+    "SuperLU library not found. If your module requires its support in Hermes,
     please install it according to instructions at
     <http://hpfem.org/hermes/doc/src/installation/matrix_solvers/superlu.html>\n"
     SUPERLU_LIBRARY SUPERLU_INCLUDE_DIR
 )
+
+IF (NOT SUPERLU_LIBRARY)
+    set(SUPERLU_LIBRARY        "")
+    set(SUPERLU_INCLUDE_DIR    "")
+ENDIF (NOT SUPERLU_LIBRARY)
+

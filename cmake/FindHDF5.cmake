@@ -5,9 +5,9 @@
 #FIND_PATH(HDF5_INCLUDE_DIR hdf5.h /usr/include/ /usr/local/include/hdf5 ${HDF5_ROOT})
 FIND_PATH(HDF5_INCLUDE_DIR hdf5.h ${HDF5_ROOT}/include)
 
-#FIND_LIBRARY(HDF5_LIBRARY hdf5 /usr/lib/ /usr/local/lib/hdf5 ${HDF5_ROOT}) 
-FIND_LIBRARY(HDF5_LIBRARY hdf5 ${HDF5_ROOT}/lib) 
-#FIND_FILE(HDF5_LIBRARY libhdf5.a /usr/lib /usr/local/lib/hfd5 ${HDF5_ROOT}) 
+#FIND_LIBRARY(HDF5_LIBRARY hdf5 /usr/lib/ /usr/local/lib/hdf5 ${HDF5_ROOT})
+FIND_LIBRARY(HDF5_LIBRARY hdf5 ${HDF5_ROOT}/lib)
+#FIND_FILE(HDF5_LIBRARY libhdf5.a /usr/lib /usr/local/lib/hfd5 ${HDF5_ROOT})
 
 
 INCLUDE(FindPackageHandleStandardArgs)
@@ -21,4 +21,5 @@ FIND_PACKAGE_HANDLE_STANDARD_ARGS(  HDF5
 IF (NOT HDF5_LIBRARY)
     set(HDF5_LIBRARY        "")
     set(HDF5_INCLUDE_DIR    "")
-ENDIF (NOT HDF5_LIBRARY)    
+ENDIF (NOT HDF5_LIBRARY)
+
