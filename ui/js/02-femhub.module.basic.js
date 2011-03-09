@@ -291,49 +291,48 @@ Boundary conditions
 
         // Source code (first and second part --- the mesh is inserted in
         // between using this.mesh_editor.get_mesh(), see below)
-        this.sourcecode1 = "\
-from hermes2d.modules.basic import ModuleBasic\n\
-from hermes2d.hermes2d import Linearizer\n\
-from hermes2d.plot import sln2png, plot_sln_mayavi\n\
-from femhub.plot import return_mayavi_figure\n\
-\n\
-mesh = \"\"\"\n";
+        this.sourcecode = FEMhub.join(
+"from hermes2d.hermes2d import Linearizer",
+"from hermes2d.plot import sln2png, plot_sln_mayavi",
+"from femhub.plot import return_mayavi_figure",
+"from basic import ModuleBasic",
+"",
+"mesh = '''",
+"{0}",
+"'''",
+"",
+"def get_sln():",
+"    e = ModuleBasic()",
+"    mesh_ok = e.set_mesh_str(mesh)",
+"    # assert mesh_ok is True",                                // XXX: why this doesn't work?
+"    e.set_initial_mesh_refinement(" + Init_ref_num_val + ")",
+"    e.set_initial_poly_degree(" + Init_p_val + ")",
+"    e.set_matrix_solver('" + Matrix_solver_val + "')",
+"    e.set_material_markers([" + Mat_marker_val + "])",
+"    e.set_c1_array([" + Mat_c1_val + "])",
+"    e.set_c2_array([" + Mat_c2_val + "])",
+"    e.set_c3_array([" + Mat_c3_val + "])",
+"    e.set_c4_array([" + Mat_c4_val + "])",
+"    e.set_c5_array([" + Mat_c5_val + "])",
+"    e.set_dirichlet_markers([" + BC_dir_marker_val + "])",
+"    e.set_dirichlet_values([" + BC_dir_marker_val + "], [" + BC_dir_value_val + "])",
+"    e.set_neumann_markers([" + BC_neumann_marker_val + "])",
+"    e.set_neumann_values([" + BC_neumann_value_val + "])",
+"    e.set_newton_markers([" + BC_newton_marker_val + "])",
+"    e.set_newton_values([" + BC_newton_value_val + "])",
+"    success = e.calculate()",
+"    assert success is True",
+"    print 'Computation finished.'",
+"    sln = e.get_solution()",
+"    f = open('application.log')",
+"    print f.read()",
+"    return sln",
+"",
+"def plot_sln(sln):",
+"    fig = plot_sln_mayavi(sln, offscreen=True)",
+"    return_mayavi_figure(fig)");
 
-        this.sourcecode2 = "\"\"\"\n\
-\n\
-def get_sln():\n\
-    e = ModuleBasic()\n\
-    mesh_ok = e.set_mesh_str(mesh)\n\
-    assert mesh_ok is True\n\
-    e.set_initial_mesh_refinement(" + Init_ref_num_val + ")\n\
-    e.set_initial_poly_degree(" + Init_p_val + ")\n\
-    e.set_matrix_solver(\"" + Matrix_solver_val + "\")\n\
-    e.set_material_markers([" + Mat_marker_val + "])\n\
-    e.set_c1_array([" + Mat_c1_val + "])\n\
-    e.set_c2_array([" + Mat_c2_val + "])\n\
-    e.set_c3_array([" + Mat_c3_val + "])\n\
-    e.set_c4_array([" + Mat_c4_val + "])\n\
-    e.set_c5_array([" + Mat_c5_val + "])\n\
-    e.set_dirichlet_markers([" + BC_dir_marker_val + "])\n\
-    e.set_dirichlet_values([" + BC_dir_marker_val + "], [" + BC_dir_value_val + "])\n\
-    e.set_neumann_markers([" + BC_neumann_marker_val + "])\n\
-    e.set_neumann_values([" + BC_neumann_value_val + "])\n\
-    e.set_newton_markers([" + BC_newton_marker_val + "])\n\
-    e.set_newton_values([" + BC_newton_value_val + "])\n\
-    success = e.calculate()\n\
-    assert success is True\n\
-    print 'Computation finished.'\n\
-    sln = e.get_solution()\n\
-    f = open('application.log')\n\
-    print f.read()\n\
-    return sln\n\
-\n\
-def plot_sln(sln):\n\
-    fig = plot_sln_mayavi(sln, offscreen=True)\n\
-    return_mayavi_figure(fig)";
-
-        this.sourcecode_generated = this.sourcecode1 +
-            this.mesh_editor.get_mesh() + this.sourcecode2;
+        this.sourcecode_generated = String.format(this.sourcecode, this.mesh_editor.get_mesh());
 
         this.engine.evaluate({
             source: this.sourcecode_generated,
@@ -352,12 +351,12 @@ def plot_sln(sln):\n\
                             done: this.display_results,
                             scope: this,
                         });
-            },
+                    },
                     scope: this,
                 });
             },
             scope: this,
-    });
+        });
     },
 
     display_results: function(result) {
