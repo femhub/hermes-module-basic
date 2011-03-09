@@ -13,7 +13,7 @@ FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
         this.panel_change_bottombar_to_statusbar(this.computation_tab);
         this.statusbar = this.computation_tab.getBottomToolbar();
         this.engine = new FEMhub.ModuleBasic.Engine({
-            statusbar: this.statusbar,
+            statusbar: this.statusbar
         });
         this.calculate_button.on("click", this.calculate, this);
         //this.dirichlet_save_button.on("click", this.save_bc_dirichlet, this);
@@ -28,7 +28,6 @@ FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
             FEMhub.log("Tab changed, refreshing the flex mesh editor.");
             this.mesh_editor.reload_flash();
         }, this);
-
     },
 
     save_bc_dirichlet: function ()
@@ -58,7 +57,7 @@ FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
         var idx = panel.toolbars.lastIndexOf(panel.bottomToolbar);
         panel.bottomToolbar = new FEMhub.Statusbar({
                 busyText: '',
-                defaultText: '',
+                defaultText: ''
             });
         panel.toolbars[idx] = panel.bottomToolbar;
     },
@@ -69,58 +68,57 @@ FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
             title: 'Boundary conditions',
             margins:'3 10 3 3',
             cmargins:'3 3 3 3',
-
             items: [{
         xtype: 'box',
                 height: '10',
-                html: "",
+                html: ""
         }, {
         xtype: 'box',
-                html: "Dirichlet markers:",
+                html: "Dirichlet markers:"
         }, {
                 xtype: 'textfield',
                 id: "BC_dir_marker",
-                value: '4',
+                value: '4'
         }, {
         xtype: 'box',
-                html: "Dirichlet values:",
+                html: "Dirichlet values:"
         }, {
                 xtype: 'textfield',
                 id: "BC_dir_value",
-                value: '0',
+                value: '0'
                 }, {
         xtype: 'box',
-                html: "Neumann markers:",
+                html: "Neumann markers:"
         }, {
                 xtype: 'textfield',
                 id: "BC_neumann_marker",
-                value: '1, 3',
+                value: '1, 3'
         }, {
         xtype: 'box',
-                html: "Neumann values:",
+                html: "Neumann values:"
         }, {
                 xtype: 'textfield',
                 id: "BC_neumann_value",
-                value: '0, 0',
+                value: '0, 0'
         }, {
         xtype: 'box',
-                html: "Newton markers:",
+                html: "Newton markers:"
         }, {
                 xtype: 'textfield',
                 id: "BC_newton_marker",
-                value: '2',
+                value: '2'
         }, {
         xtype: 'box',
-                html: "Newton values:",
+                html: "Newton values:"
         }, {
                 xtype: 'textfield',
                 id: "BC_newton_value",
-                value: '(1, 1)',
+                value: '(1, 1)'
         }, {
         xtype: 'box',
                 height: '10',
-                html: "",
-        }],
+                html: ""
+        }]
         });
 
         // window to display equation parameters
@@ -132,54 +130,54 @@ FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
             items: [{
         xtype: 'box',
                 height: '10',
-                html: "",
+                html: ""
         }, {
         xtype: 'box',
-                html: "Material markers:",
+                html: "Material markers:"
         }, {
                 xtype: 'textfield',
                 id: "Mat_marker",
-                value: '0',
+                value: '0'
         }, {
         xtype: 'box',
-                html: "Const c1:",
+                html: "Const c1:"
         }, {
                 xtype: 'textfield',
                 id: "Mat_c1",
-                value: '1',
+                value: '1'
         }, {
         xtype: 'box',
-                html: "Const c2:",
+                html: "Const c2:"
         }, {
                 xtype: 'textfield',
                 id: "Mat_c2",
-                value: '0',
+                value: '0'
         }, {
         xtype: 'box',
-                html: "Const c3:",
+                html: "Const c3:"
         }, {
                 xtype: 'textfield',
                 id: "Mat_c3",
-                value: '0',
+                value: '0'
         }, {
         xtype: 'box',
-                html: "Const c4:",
+                html: "Const c4:"
         }, {
                 xtype: 'textfield',
                 id: "Mat_c4",
-                value: '0',
+                value: '0'
         }, {
         xtype: 'box',
-                html: "Const c5:",
+                html: "Const c5:"
         }, {
                 xtype: 'textfield',
                 id: "Mat_c5",
-                value: '1',
+                value: '1'
         }, {
         xtype: 'box',
                 height: '10',
-                html: "",
-        }],
+                html: ""
+        }]
         });
 
         this.help_panel = new Ext.Panel({
@@ -213,14 +211,14 @@ Boundary conditions
                     okay: function(result) {
                         FEMhub.log(result.html);
                         panel.update(result.html);
-                    },
+                    }
                 }, {
                     fail: function(reason, result) {
                           FEMhub.log(reason);
-                    },
+                    }
                 });
-            },
-            },
+            }
+            }
         });
     },
 
@@ -349,13 +347,13 @@ Boundary conditions
                             source: "plot_sln(sln)",
                             statusbar_text: "Plotting...",
                             done: this.display_results,
-                            scope: this,
+                            scope: this
                         });
                     },
-                    scope: this,
+                    scope: this
                 });
             },
-            scope: this,
+            scope: this
         });
     },
 
@@ -373,16 +371,16 @@ Boundary conditions
             d_res = this.computation_result;
             d_res.update('<table height="100%" width="100%" border="0"><tr><td valign="middle" align="center"><img src="data:image/png;base64,' + data + '"/></td></tr></table>');
         }
-    },
+    }
 
 });
 
 FEMhub.Modules.ModuleBasic = Ext.extend(FEMhub.Module, {
     launcher: {
         text: 'Basic',
-        icon: 'femhub-module-basic-launcher-icon',
+        icon: 'femhub-module-basic-launcher-icon'
     },
-    winCls: FEMhub.ModuleBasic.BasicWindow,
+    winCls: FEMhub.ModuleBasic.BasicWindow
 });
 
 FEMhub.ModuleBasic.get_radio_group_value = function(radiofieldset) {
@@ -440,8 +438,8 @@ FEMhub.ModuleBasic.Engine = Ext.extend(Ext.util.Observable, {
                 end: function(ok, ret) {
                     if (Ext.isDefined(this.statusbar))
                         this.statusbar.clearBusy(this._id);
-                },
-            },
+                }
+            }
         });
     },
 
@@ -452,13 +450,13 @@ FEMhub.ModuleBasic.Engine = Ext.extend(Ext.util.Observable, {
                 done: function () {
                     this.evaluate(config);
                 },
-                scope: this,
+                scope: this
             });
             return;
         }
         FEMhub.RPC.Engine.evaluate({
             uuid: this.uuid,
-            source: config.source,
+            source: config.source
         }, {
             okay: function(result) {
                 FEMhub.log("CODE FOR ENGINE:");
@@ -478,16 +476,16 @@ FEMhub.ModuleBasic.Engine = Ext.extend(Ext.util.Observable, {
                 start: function() {
                     if (Ext.isDefined(this.statusbar))
                         this._id = this.statusbar.showBusy({
-                            text: config.statusbar_text,
+                            text: config.statusbar_text
                         });
                 },
                 end: function(ok, ret) {
                     if (Ext.isDefined(this.statusbar))
                         this.statusbar.clearBusy(this._id);
                 },
-                scope: this,
-            },
+                scope: this
+            }
         });
-    },
+    }
 });
 
