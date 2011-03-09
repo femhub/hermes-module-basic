@@ -41,15 +41,15 @@ FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
         // Create new boundary condition.
         //var newBC = new boundaryCondition(marker, type, value, -9999);
         //this.arrayBoundaryConditions.push(newBC);
-    }, 
+    },
 
     save_bc_neumann: function ()
     {
-    }, 
+    },
 
     save_bc_newton: function ()
     {
-    }, 
+    },
 
     panel_change_bottombar_to_statusbar: function(panel) {
         // This changes the bottom bar of 'panel' into FEMhub Statusbar
@@ -71,57 +71,57 @@ FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
             cmargins:'3 3 3 3',
 
             items: [{
-		xtype: 'box',
+        xtype: 'box',
                 height: '10',
                 html: "",
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Dirichlet markers:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "BC_dir_marker",
                 value: '4',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Dirichlet values:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "BC_dir_value",
                 value: '0',
                 }, {
-		xtype: 'box',
+        xtype: 'box',
                 html: "Neumann markers:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "BC_neumann_marker",
                 value: '1, 3',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Neumann values:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "BC_neumann_value",
                 value: '0, 0',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Newton markers:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "BC_newton_marker",
                 value: '2',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Newton values:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "BC_newton_value",
                 value: '(1, 1)',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 height: '10',
                 html: "",
-		}], 
-	    });
+        }],
+        });
 
         // window to display equation parameters
         this.materials_window = new Ext.Panel({
@@ -130,68 +130,68 @@ FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
             cmargins:'3 3 3 3',
 
             items: [{
-		xtype: 'box',
+        xtype: 'box',
                 height: '10',
                 html: "",
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Material markers:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "Mat_marker",
                 value: '0',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Const c1:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "Mat_c1",
                 value: '1',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Const c2:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "Mat_c2",
                 value: '0',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Const c3:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "Mat_c3",
                 value: '0',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Const c4:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "Mat_c4",
                 value: '0',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 html: "Const c5:",
-		}, {
+        }, {
                 xtype: 'textfield',
                 id: "Mat_c5",
                 value: '1',
-		}, {
-		xtype: 'box',
+        }, {
+        xtype: 'box',
                 height: '10',
                 html: "",
-		}], 
-	    });
+        }],
+        });
 
         this.help_panel = new Ext.Panel({
             listeners: {
             afterrender: function(panel) {
-			FEMhub.RPC.Docutils.render({rst: 		    
-"Module Basic Adapt\n" + 
+            FEMhub.RPC.Docutils.render({rst:
+"Module Basic Adapt\n" +
 "==================\n",
-						    /*
+                            /*
 This is a simple generic module for a linear second-order PDE based on the Hermes library.
-The purpose of modules like this is to provide a higher-level API where the user is not 
-exposed to wesk forms, spaces, solver initialization, and other technical details. 
+The purpose of modules like this is to provide a higher-level API where the user is not
+exposed to wesk forms, spaces, solver initialization, and other technical details.
 
 PDE
 ===
@@ -209,31 +209,31 @@ Boundary conditions
   * Neumann with piecewise-constant normal derivatives ($\partial u/ \partial n$ = const),
   * Newton with piecewise-constant parameters (const_1 $u$ + $\partial u/ \partial n$ = const_2)'
                                                      */
-			    }, {
+                }, {
                     okay: function(result) {
                         FEMhub.log(result.html);
                         panel.update(result.html);
-				},
-			    }, {
+                    },
+                }, {
                     fail: function(reason, result) {
                           FEMhub.log(reason);
-				},
-			    });
-	        },
+                    },
+                });
             },
-	    });
-	},
+            },
+        });
+    },
 
     calculate: function() {
-	// Input box for initial poly degree.
+        // Input box for initial poly degree.
         Init_p_val = this.computation_setup.get("Init_p").getValue();
         FEMhub.log("Init_p_val: " + Init_p_val);
 
-	// Input box for initial refinements.
+        // Input box for initial refinements.
         Init_ref_num_val = this.computation_setup.get("Init_ref_num").getValue();
         FEMhub.log("Init_ref_num_val: " + Init_ref_num_val);
 
-	// Input box for matrix solver.
+        // Input box for matrix solver.
         //Matrix_solver_val = this.computation_setup.get("Matrix_solver").getValue();
         //FEMhub.log("Matrix solver: " + Matrix_solver_val);
 
@@ -241,54 +241,53 @@ Boundary conditions
         Matrix_solver_val = FEMhub.ModuleBasic.get_radio_group_value(this.computation_setup.getComponent('ms_field_set'));
         FEMhub.log("Matrix_solver_val: " + Matrix_solver_val);
 
-	// Input box for Dirichlet markers.
+        // Input box for Dirichlet markers.
         BC_dir_marker_val = this.boundary_conditions_window.get("BC_dir_marker").getValue();
         FEMhub.log("BC_dir_marker_val: " + BC_dir_marker_val);
 
-	// Input box for Dirichlet values.
+        // Input box for Dirichlet values.
         BC_dir_value_val = this.boundary_conditions_window.get("BC_dir_value").getValue();
         FEMhub.log("BC_dir_value_val: " + BC_dir_value_val);
 
-	// Input box for Neumann markers.
+        // Input box for Neumann markers.
         BC_neumann_marker_val = this.boundary_conditions_window.get("BC_neumann_marker").getValue();
         FEMhub.log("BC_neumann_marker_val: " + BC_neumann_marker_val);
 
-	// Input box for Neumann values.
+        // Input box for Neumann values.
         BC_neumann_value_val = this.boundary_conditions_window.get("BC_neumann_value").getValue();
         FEMhub.log("BC_neumann_value_val: " + BC_neumann_value_val);
 
-	// Input box for Newton markers.
+        // Input box for Newton markers.
         BC_newton_marker_val = this.boundary_conditions_window.get("BC_newton_marker").getValue();
         FEMhub.log("BC_newton_marker_val: " + BC_newton_marker_val);
 
-	// Input box for Newton values.
+        // Input box for Newton values.
         BC_newton_value_val = this.boundary_conditions_window.get("BC_newton_value").getValue();
         FEMhub.log("BC_newton_value_val: " + BC_newton_value_val);
 
-	// Input box for material markers.
+        // Input box for material markers.
         Mat_marker_val = this.materials_window.get("Mat_marker").getValue();
         FEMhub.log("Mat_marker_val: " + Mat_marker_val);
 
-	// Input box for equation constants c1.
+        // Input box for equation constants c1.
         Mat_c1_val =  this.materials_window.get("Mat_c1").getValue();
         FEMhub.log("Mat_c1_val: " + Mat_c1_val);
 
-	// Input box for equation constants c2.
+        // Input box for equation constants c2.
         Mat_c2_val =  this.materials_window.get("Mat_c2").getValue();
         FEMhub.log("Mat_c2_val: " + Mat_c2_val);
 
-	// Input box for equation constants c3.
+        // Input box for equation constants c3.
         Mat_c3_val =  this.materials_window.get("Mat_c3").getValue();
         FEMhub.log("Mat_c3_val: " + Mat_c3_val);
 
-	// Input box for equation constants c4.
+        // Input box for equation constants c4.
         Mat_c4_val =  this.materials_window.get("Mat_c4").getValue();
         FEMhub.log("Mat_c4_val: " + Mat_c4_val);
 
-	// Input box for material constants c5.
+        // Input box for material constants c5.
         Mat_c5_val =  this.materials_window.get("Mat_c5").getValue();
         FEMhub.log("Mat_c5_val: " + Mat_c5_val);
-
 
         // Source code (first and second part --- the mesh is inserted in
         // between using this.mesh_editor.get_mesh(), see below)
@@ -353,12 +352,12 @@ def plot_sln(sln):\n\
                             done: this.display_results,
                             scope: this,
                         });
-		    },
+            },
                     scope: this,
                 });
             },
             scope: this,
-	});
+    });
     },
 
     display_results: function(result) {
@@ -391,7 +390,7 @@ FEMhub.ModuleBasic.get_radio_group_value = function(radiofieldset) {
     FEMhub.log("Reading matrix solver selection.");
     for (i = 0; i < radiofieldset.items.length; i++) {
         var item = radiofieldset.getComponent(i);
-	    if (item.checked) {
+        if (item.checked) {
             FEMhub.log(item.boxLabel + " radio is checked.");
             return item.value;
         }
@@ -448,48 +447,48 @@ FEMhub.ModuleBasic.Engine = Ext.extend(Ext.util.Observable, {
     },
 
     evaluate: function(config) {
-            config = config || {};
-            if (! this.isInitialized()) {
-                this.initialize({
-                    done: function () {
-                        this.evaluate(config);
-                    },
-                    scope: this,
-                });
-                return;
-            }
-            FEMhub.RPC.Engine.evaluate({
-                uuid: this.uuid,
-                source: config.source,
-            }, {
-                okay: function(result) {
-		    FEMhub.log("CODE FOR ENGINE:");
-		    FEMhub.log(config.source);
-                    FEMhub.log("Evaluate succeeded");
-                    this.fireEvent("evaluate_finished", result);
-                    if (Ext.isDefined(config.done)) {
-                        config.done.call(config.scope, result);
-                    }
-                },
-                fail: function() {
-                    FEMhub.msg.info("Error", "Evaluate failed (engine was killed)");
-                    FEMhub.log("Evaluate failed");
+        config = config || {};
+        if (! this.isInitialized()) {
+            this.initialize({
+                done: function () {
+                    this.evaluate(config);
                 },
                 scope: this,
-                status: {
-                    start: function() {
-                        if (Ext.isDefined(this.statusbar))
-                            this._id = this.statusbar.showBusy({
-                                text: config.statusbar_text,
-                            });
-                    },
-                    end: function(ok, ret) {
-                        if (Ext.isDefined(this.statusbar))
-                            this.statusbar.clearBusy(this._id);
-                    },
-                    scope: this,
-                },
             });
+            return;
+        }
+        FEMhub.RPC.Engine.evaluate({
+            uuid: this.uuid,
+            source: config.source,
+        }, {
+            okay: function(result) {
+                FEMhub.log("CODE FOR ENGINE:");
+                FEMhub.log(config.source);
+                FEMhub.log("Evaluate succeeded");
+                this.fireEvent("evaluate_finished", result);
+                if (Ext.isDefined(config.done)) {
+                    config.done.call(config.scope, result);
+                }
+            },
+            fail: function() {
+                FEMhub.msg.info("Error", "Evaluate failed (engine was killed)");
+                FEMhub.log("Evaluate failed");
+            },
+            scope: this,
+            status: {
+                start: function() {
+                    if (Ext.isDefined(this.statusbar))
+                        this._id = this.statusbar.showBusy({
+                            text: config.statusbar_text,
+                        });
+                },
+                end: function(ok, ret) {
+                    if (Ext.isDefined(this.statusbar))
+                        this.statusbar.clearBusy(this._id);
+                },
+                scope: this,
+            },
+        });
     },
-
 });
+
