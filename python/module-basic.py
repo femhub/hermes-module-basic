@@ -1,4 +1,4 @@
-# If you have installed the Hermes wrappers and the module wrapper into 
+# If you have installed the Hermes wrappers and the module wrapper into
 # directories which are not on default Python path, you must point to them here:
 import sys
 sys.path.append("/home/pavel/build/hermes/lib/python")
@@ -6,7 +6,7 @@ sys.path.append("/home/pavel/build/hermes/lib/python")
 from hermes2d.hermes2d import Linearizer
 from hermes2d.plot import sln2png
 
-# If you ran 'make install' and appended 'sys.path' appropriately (see above), 
+# If you ran 'make install' and appended 'sys.path' appropriately (see above),
 # you may import the module from anywhere by the following line:
 #from hermes_modules.basic import ModuleBasic
 
@@ -19,7 +19,7 @@ def main():
     e.set_initial_mesh_refinement(2)
     e.set_initial_poly_degree(4)
     solver_name = "umfpack"   # choose from amesos, aztecoo, mumps, petsc, superlu, umfpack
-    e.set_matrix_solver(solver_name) 
+    e.set_matrix_solver(solver_name)
     print "Matrix solver:", solver_name
     e.set_material_markers([0])
     e.set_c1_array([1])
@@ -41,6 +41,8 @@ def main():
     print "Solver time:", e.get_solver_time()
     print "Saving solution to 'solution.png'"
     sln2png(sln, "solution.png")
+    raw_input()
 
 if __name__ == "__main__":
     main()
+
