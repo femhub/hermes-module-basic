@@ -137,7 +137,6 @@ if (WITH_PYTHON)
         NAMES   hermes2d.pxd
         PATHS   ${HERMES_PYTHON_WRAPPERS_DIR}
                 ${MY_HERMES2D_REAL_LIB_DIRS}/python/hermes2d
-                ${DEFAULT_PYTHON_INSTALL_PATH}/hermes2d
                 ${PYTHON_INSTALL_PATH}/hermes2d
     )
         
@@ -146,12 +145,12 @@ if (WITH_PYTHON)
 	    SET(HERMES_PYTHON_WRAPPERS_DIR  ${HERMES_WRAPPER_PXD}/..)
 	    MESSAGE(STATUS "Hermes Python wrappers found: ${HERMES_PYTHON_WRAPPERS_DIR}")
     ELSE(HERMES_WRAPPER_PXD)
-	    MESSAGE(FATAL_ERROR "Could not find Hermes Python wrappers.")
-    ENDIF(HERMES_WRAPPER_PXD)   
-    
-    #  "Python wrappers for Hermes2D not found. Either disable them by setting WITH_PYTHON to NO,
-    #  "or please install Hermes2D with Python wrappers according to instructions at 
-    #  "<http://hpfem.org/hermes/doc/index.html>.\n"
-    
+	    MESSAGE(FATAL_ERROR 
+"Python wrappers for Hermes2D not found. 
+Either disable them by setting WITH_PYTHON to NO, 
+or please install Hermes2D with Python wrappers 
+according to instructions at <http://hpfem.org/hermes/doc/index.html>.\n"
+)
+    ENDIF(HERMES_WRAPPER_PXD)      
         
 endif (WITH_PYTHON)

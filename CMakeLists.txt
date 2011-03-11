@@ -17,17 +17,14 @@ set(WITH_TESTS      YES)
 # Allow to override the default values in CMake.vars:
 include(CMake.vars OPTIONAL)
 
-# General purpose CMake macros.
-include(CMakeMacros.txt)
-
-IF (WITH_PYTHON)
-    ENSURE_PYTHON()
-ENDIF (WITH_PYTHON)
-
 find_package(HERMES REQUIRED)
 include_directories(${HERMES_INCLUDE_DIRS})
 
 include(${HERMES_CONFIG_FILE})
+
+IF (WITH_PYTHON)
+    include_directories(${PYTHON_INCLUDE_PATH} ${NUMPY_INCLUDE_PATH})
+ENDIF (WITH_PYTHON)
 
 if(WITH_UMFPACK)
     include_directories(${UMFPACK_INCLUDE_DIR})
@@ -93,7 +90,10 @@ ConfigureRPATH()
 
 if (WITH_CXX)
     # We require Python for the mesh parser (it also needs NumPy)
-    ENSURE_PYTHON()
+    if (NOT WITH_PYTHON)
+        include_directories(${PYTHON_INCLUDE_PATH} ${NUMPY_INCLUDE_PATH})
+    endif (NOT WITH_PYTHON)
+    
     add_subdirectory(src)
 endif (WITH_CXX)
 

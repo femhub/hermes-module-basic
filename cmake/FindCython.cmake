@@ -7,7 +7,7 @@
 FIND_FILE(CYTHON_BIN cython /usr/bin /usr/local/bin)
 SET(CYTHON_FLAGS --cplus --fast-fail)
 
-SET(Cython_FOUND FALSE)
+SET(CYTHON_FOUND FALSE)
 IF (CYTHON_BIN)
     # Try to run Cython, to make sure it works:
     execute_process(
@@ -74,10 +74,7 @@ endmacro(CYTHON_ADD_MODULE_PYX)
 
 # Cythonizes and compiles a .pyx file
 macro(CYTHON_ADD_MODULE name)
+    include(AddPythonLibrary)
     CYTHON_ADD_MODULE_PYX(${name})
-    # We need Python for this:
-    if (NOT PYTHON_FOUND)
-        find_package(Python REQUIRED)
-    endif (NOT PYTHON_FOUND)
     add_python_library(${name} ${name}.cpp ${ARGN})
 endmacro(CYTHON_ADD_MODULE)
