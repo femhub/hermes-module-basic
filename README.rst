@@ -33,7 +33,7 @@ Build the Module
 For this, install the Hermes library first. Change dir to your 
 local Hermes repository, for example /home/pavel/repos/hermes/.
 There, either type "sudo make install" to have the Hermes library 
-installed system-wide (into /usr/local/). Or, add into your 
+installed system-wide (typically into /usr/local/), or add into your 
 CMake.vars file a line::
 
    set(CMAKE_INSTALL_PREFIX    /home/pavel/build/hermes)
