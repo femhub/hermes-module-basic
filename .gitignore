@@ -23,7 +23,6 @@ src/CMakeFiles/
 src/CTestTestfile.cmake
 src/Makefile
 src/cmake_install.cmake
-src/config.h
 src/libhermes_basic.so
 src/module-basic
 
