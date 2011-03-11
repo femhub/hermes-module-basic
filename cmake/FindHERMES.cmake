@@ -44,6 +44,16 @@ FIND_PATH(HERMES_COMMON_INCLUDE_DIR common.h
   /usr/local
 )
 
+FIND_PATH(HERMES_CONFIG_FILE_DIR    config_real.cmake ${MY_HERMES_COMMON_INC_DIRS}/.. NO_DEFAULT_PATH)
+FIND_PATH(HERMES_CONFIG_FILE_DIR    config_real.cmake 
+  /usr/include 
+  /usr/include/hermes
+  /usr/local/include 
+  /usr/local/include/hermes
+  /opt/local/hermes
+  /usr/local
+)
+
 
 IF (DEBUG)
     FIND_LIBRARY( HERMES2D_REAL_LIBRARY
@@ -110,8 +120,10 @@ INCLUDE(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(  HERMES 
   "Real version of the Hermes2D library not found. Please install it according to
   instructions at <http://hpfem.org/hermes/doc/index.html>.\n"
-  HERMES_LIBRARIES HERMES_INCLUDE_DIRS
+  HERMES_LIBRARIES HERMES_INCLUDE_DIRS HERMES_CONFIG_FILE_DIR
 )
+
+SET(HERMES_CONFIG_FILE  ${HERMES_CONFIG_FILE_DIR}/config_real.cmake)
 
 if (WITH_PYTHON)
     # Use a system directory into which Python puts all the modules by default.
@@ -128,7 +140,7 @@ if (WITH_PYTHON)
                 ${DEFAULT_PYTHON_INSTALL_PATH}/hermes2d
                 ${PYTHON_INSTALL_PATH}/hermes2d
     )
-    
+        
     IF(HERMES_WRAPPER_PXD)
 	    SET(HERMES_PYTHON_WRAPPERS TRUE)
 	    SET(HERMES_PYTHON_WRAPPERS_DIR  ${HERMES_WRAPPER_PXD}/..)

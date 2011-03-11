@@ -1,25 +1,3 @@
-macro(CHECK_STACKTRACE)
-    # Check which kind of stacktrace is available
-    include(CheckIncludeFile)
-    CHECK_INCLUDE_FILE("link.h" HAVE_TEUCHOS_LINK)
-    CHECK_INCLUDE_FILE("bfd.h" HAVE_TEUCHOS_BFD)
-    CHECK_INCLUDE_FILE("execinfo.h" HAVE_EXECINFO)
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-      set(HAVE_CXXABI yes)
-    endif()
-    include(CheckFunctionExists)
-    CHECK_FUNCTION_EXISTS(vasprintf HAVE_VASPRINTF)
-    CHECK_FUNCTION_EXISTS(strcasecmp HAVE_STRCASECMP)
-
-    if (HAVE_EXECINFO AND HAVE_CXXABI AND HAVE_VASPRINTF AND HAVE_TEUCHOS_LINK AND HAVE_TEUCHOS_BFD AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-      set(HAVE_TEUCHOS_STACKTRACE yes)
-    endif()
-
-    set(CMAKE_REQUIRED_LIBRARIES m)
-    CHECK_FUNCTION_EXISTS(fmemopen HAVE_FMEMOPEN)
-    CHECK_FUNCTION_EXISTS(log2 HAVE_LOG2)
-endmacro(CHECK_STACKTRACE)
-
 # Sets compiler settings for a library.
 macro(GENERAL_COMPILE_SETTINGS  LIB)
     # Enable debugging symbols for all files all the time:
@@ -65,6 +43,8 @@ endmacro(GENERAL_COMPILE_SETTINGS)
 
 # Sets linker settings.
 macro(LIBRARY_LINK_SETTINGS LIB)
+  set(CMAKE_REQUIRED_LIBRARIES m)
+  
   if(NOT MSVC)
       IF(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
           target_link_libraries(${LIB} "rt")
@@ -82,9 +62,7 @@ macro(LIBRARY_LINK_SETTINGS LIB)
       ${HERMES2D_REAL_LIBRARY}
       ${HERMES_COMMON_LIBRARY}
       ${GLUT_LIBRARY} ${GLEW_LIBRARY}
-      ${EXODUSII_LIBRARIES}
       ${HDF5_LIBRARY}
-      ${ANTTWEAKBAR_LIBRARY}
       ${UMFPACK_LIBRARIES}
       ${TRILINOS_LIBRARIES}
       ${PETSC_LIBRARIES}
@@ -95,7 +73,7 @@ macro(LIBRARY_LINK_SETTINGS LIB)
       ${CLAPACK_LIBRARY} ${BLAS_LIBRARY} ${F2C_LIBRARY}
       ${ADDITIONAL_LIBS}
       ${PYTHON_LIBRARY}
-      ${EXODUSII_LIBRARY}
+      ${EXODUSII_LIBRARIES}
   )
   
   set_property(TARGET ${LIB} PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)

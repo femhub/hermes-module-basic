@@ -9,17 +9,6 @@ set(WITH_CXX        YES)
 set(WITH_PYTHON     YES)
 set(WITH_UI         NO)
 
-set(WITH_UMFPACK    NO)
-set(WITH_SUPERLU    NO)
-set(SUPERLU_MT      NO)
-set(WITH_OPENMP     NO)
-set(WITH_PETSC      NO)
-set(WITH_MUMPS      NO)
-set(WITH_TRILINOS   NO)
-set(WITH_EXODUSII   NO)
-set(WITH_HDF5       NO)
-set(WITH_GLUT       NO)
-
 set(DEBUG           YES)
 set(RELEASE         NO)
 
@@ -38,96 +27,65 @@ ENDIF (WITH_PYTHON)
 find_package(HERMES REQUIRED)
 include_directories(${HERMES_INCLUDE_DIRS})
 
-find_package(PTHREAD REQUIRED)
+include(${HERMES_CONFIG_FILE})
 
-find_package(GLEW)
-if(GLEW_FOUND)
-    find_package(GLUT)
-    
-    if(GLUT_FOUND)
-        set(WITH_GLUT   YES)
-    endif(GLUT_FOUND)        
-endif(GLEW_FOUND)
-
-find_package(UMFPACK)
-if(UMFPACK_FOUND)
-    set(WITH_UMFPACK    YES)
+if(WITH_UMFPACK)
     include_directories(${UMFPACK_INCLUDE_DIR})
-endif(UMFPACK_FOUND)    
+endif(WITH_UMFPACK)
 	
-find_package(PETSC)
-if(PETSC_FOUND)
-    set(WITH_PETSC   YES)
+if(WITH_PETSC)
     include_directories(${PETSC_INCLUDE_DIR})
-endif(PETSC_FOUND)
+endif(WITH_PETSC)
 
-find_package(MUMPS)
-if(MUMPS_FOUND)
-    set(WITH_MUMPS   YES)
+if(WITH_MUMPS)
     include_directories(${MUMPS_INCLUDE_DIR})
-endif(MUMPS_FOUND)
+endif(WITH_MUMPS)
 
-find_package(TRILINOS)
-if(TRILINOS_FOUND)
-    set(WITH_TRILINOS   YES)
+if(WITH_TRILINOS)
     include_directories(${TRILINOS_INCLUDE_DIR})
-endif(TRILINOS_FOUND)
+endif(WITH_TRILINOS)
 
-find_package(SUPERLU)
-if(SUPERLU_FOUND)
-    set(WITH_SUPERLU   YES)
+if(WITH_SUPERLU)
     include_directories(${SUPERLU_INCLUDE_DIR})
 
     if(SUPERLU_MT)
         add_definitions(-DSLU_MT)
     endif(SUPERLU_MT)
-endif(SUPERLU_FOUND)	  
+endif(WITH_SUPERLU)
 
 if (WITH_OPENMP)
-    find_package(OpenMP)
+    find_package(OpenMP)    #TODO: Find what variables are set and include them
+                            #   in Hermes' config file
     set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS})
     set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS})
 endif (WITH_OPENMP)
 
-find_package(HDF5)
-if(HDF5_FOUND)
-    set(WITH_HDF5   NO)
+if(WITH_HDF5)
     include_directories(${HDF5_INCLUDE_DIR})
-endif(HDF5_FOUND)
+endif(WITH_HDF5)
 
-find_package(EXODUSII)
-if(EXODUSII_FOUND)
-    set(WITH_EXODUSII   YES)
+if(WITH_EXODUSII)
     include_directories(${EXODUSII_INCLUDE_DIR})
-endif(EXODUSII_FOUND)
+endif(WITH_EXODUSII)
+
+if(NOT WITH_GLUT)
+    add_definitions(-DNOGLUT)
+endif(NOT WITH_GLUT)
 
 # Solvers (TODO: This could maybe go into hermes_common/solver/CMakeLists.txt).
 if(MSVC)
-	if(WITH_PETSC OR WITH_MUMPS OR WITH_TRILINOS OR WITH_SUPERLU)
-	    if (NOT CLAPACK_FOUND)
-    		find_package(CLAPACK REQUIRED)
-	    	include_directories(${CLAPACK_INCLUDE_DIRS})
-	    endif (NOT CLAPACK_FOUND)
-	 
-	    # If the library was found, prevent searching for it again in subsequent 
-	    # invocations of cmake .
-	    set(CLAPACK_FOUND    YES CACHE STRING "Lapack/BLAS library.")   
-	endif(WITH_PETSC OR WITH_MUMPS OR WITH_TRILINOS OR WITH_SUPERLU)
+	if(CLAPACK_INCLUDE_DIRS)
+  	    include_directories(${CLAPACK_INCLUDE_DIRS})
+	endif(CLAPACK_INCLUDE_DIRS)
 else(MSVC)
   # All third party solvers require BLAS and LAPACK (both found in the package LAPACK).
   # FindLAPACK is Fortran-only so Fortran must be enabled as well.
-  if(WITH_UMFPACK OR WITH_PETSC OR WITH_MUMPS OR WITH_TRILINOS OR WITH_SUPERLU)
-    if (NOT LAPACK_FOUND)
-        enable_language(Fortran)
-        find_package(LAPACK REQUIRED)
-    endif (NOT LAPACK_FOUND)
-    
-    add_definitions(-DWITH_BLAS)
-    
-    # If the library was found, prevent searching for it again in subsequent 
-	# invocations of cmake .
-	set(LAPACK_FOUND    YES CACHE STRING "Lapack/BLAS library.")
-  endif(WITH_UMFPACK OR WITH_PETSC OR WITH_MUMPS OR WITH_TRILINOS OR WITH_SUPERLU)
+  # TODO: Find if this is still neccessary (there is no find_package(LAPACK) any more
+  #       as the library path is fetched from Hermes' config file).
+  # if(WITH_UMFPACK OR WITH_PETSC OR WITH_MUMPS OR WITH_TRILINOS OR WITH_SUPERLU)
+  #   enable_language(Fortran)     
+  #   add_definitions(-DWITH_BLAS)
+  # endif(WITH_UMFPACK OR WITH_PETSC OR WITH_MUMPS OR WITH_TRILINOS OR WITH_SUPERLU)
 endif(MSVC)  
 
 include(ConfigureRPATH)
