@@ -8,8 +8,8 @@
 //#define HERMES_REPORT_INFO
 #define HERMES_REPORT_FILE "application.log"
 #include "hermes2d.h"
-#include "disc.h"
-#include "basic.h"
+#include "utils/disc.h"
+#include "hermes_basic/basic.h"
 
 int main(int argc, char* argv[])
 {

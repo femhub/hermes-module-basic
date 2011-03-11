@@ -7,7 +7,7 @@ from hermes2d.hermes2d_defs cimport Solution
 # FIXME; Space needs wrapping
 # from hermes2d.hermes2d_defs cimport Space
 
-cdef extern from "basic.h":
+cdef extern from "hermes_basic/basic.h":
 
     cdef cppclass ModuleBasic:
         void set_mesh_str(char *mesh)
