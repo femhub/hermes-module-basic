@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # If you have installed the Hermes wrappers and the module wrapper into
 # directories which are not on default Python path, you must point to them here:
 import sys
