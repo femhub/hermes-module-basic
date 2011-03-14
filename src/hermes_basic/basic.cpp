@@ -1,9 +1,9 @@
 #include "basic.h"
 
 // FIXME: Because of callbacks that depend on global variables
-// we need to define a few global arrays below, but this is 
-// a temporary solution. Like this, one cannot have two instances 
-// of the basic module at the same time -- their global variables 
+// we need to define a few global arrays below, but this is
+// a temporary solution. Like this, one cannot have two instances
+// of the basic module at the same time -- their global variables
 // would interfere with each other.
 Hermes::vector<int> _global_mat_markers;
 std::vector<double> _global_c1_array;
@@ -55,7 +55,7 @@ ModuleBasic::~ModuleBasic()
   delete this->space;
 }
 
-// Set mesh via a string. 
+// Set mesh via a string.
 // See basic.h for an example of such a string.
 // TODO: Add more tests for correctness of the mesh.
 bool ModuleBasic::set_mesh_str(const std::string &mesh_str)
@@ -81,18 +81,18 @@ bool ModuleBasic::set_mesh_str(const std::string &mesh_str)
   m.show(this->mesh);
   View::wait();
   */
-  
+
   return true;
 }
 
 // Set the number of initial uniform mesh refinements.
-void ModuleBasic::set_initial_mesh_refinement(int init_ref_num) 
+void ModuleBasic::set_initial_mesh_refinement(int init_ref_num)
 {
   this->init_ref_num = init_ref_num;
 }
 
 // Set initial poly degree in elements.
-void ModuleBasic::set_initial_poly_degree(int p) 
+void ModuleBasic::set_initial_poly_degree(int p)
 {
   this->init_p = p;
 }
@@ -111,7 +111,7 @@ void ModuleBasic::set_material_markers(const std::vector<int> &m_markers)
 void ModuleBasic::set_c1_array(const std::vector<double> &c1_array)
 {
   int n = c2_array.size();
-  for (int i = 0; i < n; i++) 
+  for (int i = 0; i < n; i++)
   if (c2_array[i] <= 1e-10) error("The c1 array needs to be positive.");
   this->c1_array = c1_array;
   // FIXME: these global arrays need to be removed.
@@ -153,28 +153,22 @@ void ModuleBasic::set_c5_array(const std::vector<double> &c5_array)
 // Set Dirichlet boundary markers.
 void ModuleBasic::set_dirichlet_markers(const std::vector<int> &bdy_markers_dirichlet)
 {
-  //this->bdy_markers_dirichlet = bdy_markers_dirichlet;
-  Hermes::vector<int> t;
-  for (unsigned int i = 0; i < bdy_markers_dirichlet.size(); i++) {
-    t.push_back(bdy_markers_dirichlet[i]);
-  }
-  this->bc_types.add_bc_dirichlet(t);
+  this->bdy_markers_dirichlet = bdy_markers_dirichlet;
+  this->bc_types.add_bc_dirichlet(bdy_markers_dirichlet);
 }
 
 // Set Dirichlet boundary values.
-void ModuleBasic::set_dirichlet_values(const std::vector<int> &bdy_markers_dirichlet,
-                                       const std::vector<double> &bdy_values_dirichlet)
+void ModuleBasic::set_dirichlet_values(const std::vector<double> &bdy_values_dirichlet)
 {
-  Hermes::vector<int> tm;
-  for (unsigned int i = 0; i < bdy_markers_dirichlet.size(); i++) {
-    tm.push_back(bdy_markers_dirichlet[i]);
+  this->bdy_values_dirichlet = bdy_values_dirichlet;
+
+  if (this->bdy_markers_dirichlet.size() != bdy_values_dirichlet.size()) {
+    error("Mismatched numbers of Dirichlet boundary markers and values.");
   }
-  Hermes::vector<double> tv;
-  for (unsigned int i = 0; i < bdy_values_dirichlet.size(); i++) {
-    tv.push_back(bdy_values_dirichlet[i]);
+
+  for (size_t i = 0; i < this->bdy_markers_dirichlet.size(); i++) {
+    this->bc_values.add_const(this->bdy_markers_dirichlet[i], bdy_values_dirichlet[i]);
   }
-  if (tm.size() != tv.size()) error("Mismatched numbers of Dirichlet boundary markers and values.");
-  for (unsigned int i = 0; i < tm.size(); i++) this->bc_values.add_const(tm[i], tv[i]);
 }
 
 // Set Neumann boundary markers.
@@ -235,13 +229,13 @@ void ModuleBasic::materials_sanity_check()
 }
 
 // Get mesh string.
-const char* ModuleBasic::get_mesh_string() 
+const char* ModuleBasic::get_mesh_string()
 {
   return this->mesh_str.c_str();
 }
 
 // Clear mesh string.
-void ModuleBasic::clear_mesh_string() 
+void ModuleBasic::clear_mesh_string()
 {
   this->mesh_str.clear();
 }
@@ -252,25 +246,25 @@ void ModuleBasic::get_solution(Solution* s)
 }
 
 // Set mesh.
-void ModuleBasic::set_mesh(Mesh* m) 
+void ModuleBasic::set_mesh(Mesh* m)
 {
   this->mesh = m;
 }
 
 // Get mesh.
-Mesh* ModuleBasic::get_mesh() 
+Mesh* ModuleBasic::get_mesh()
 {
   return this->mesh;
 }
 
 // Get space.
-void ModuleBasic::get_space(H1Space* s) 
+void ModuleBasic::get_space(H1Space* s)
 {
   s->dup(this->space->get_mesh());
 }
 
 // Get number of elements in base mesh.
-int ModuleBasic::get_num_base_elements() 
+int ModuleBasic::get_num_base_elements()
 {
   return this->mesh->get_num_base_elements();
 }
@@ -307,7 +301,7 @@ double ModuleBasic::get_solver_time()
   return this->solver_time;
 }
 
-bool ModuleBasic::create_space_and_forms() 
+bool ModuleBasic::create_space_and_forms()
 {
   /* SANITY CHECKS */
 
@@ -357,13 +351,13 @@ bool ModuleBasic::create_space_and_forms()
 }
 
 // Solve the problem.
-bool ModuleBasic::calculate() 
+bool ModuleBasic::calculate()
 {
   // Begin assembly time measurement.
   TimePeriod cpu_time_assembly;
   cpu_time_assembly.tick();
 
-  // Perform basic sanity checks, create mesh, perform 
+  // Perform basic sanity checks, create mesh, perform
   // uniform refinements, create space, register weak forms.
   bool mesh_ok = this->create_space_and_forms();
   if (!mesh_ok) return false;

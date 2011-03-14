@@ -8,12 +8,12 @@
 
 #include "hermes2d.h"
 
-// This is a simple generic module for a linear second-order PDE based on the Hermes 
-// library. The purpose of modules like this is to provide a higher-level API where 
-// the user is not exposed to wesk forms, spaces, solver initialization, and other 
-// technical details. 
+// This is a simple generic module for a linear second-order PDE based on the Hermes
+// library. The purpose of modules like this is to provide a higher-level API where
+// the user is not exposed to wesk forms, spaces, solver initialization, and other
+// technical details.
 //
-// PDE: -div(c1 \nabla u) + (c2, c3) \cdot \nabla u + c4 u = c5 
+// PDE: -div(c1 \nabla u) + (c2, c3) \cdot \nabla u + c4 u = c5
 //      c1 ... equation parameter, element-wise constant
 //      c2 ... equation parameter, element-wise constant
 //      c3 ... equation parameter, element-wise constant
@@ -67,8 +67,7 @@ public:
   void set_dirichlet_markers(const std::vector<int> &bdy_markers_dirichlet);
 
   // Set Dirichlet boundary values.
-  void set_dirichlet_values(const std::vector<int> &bdy_markers_dirichlet,
-                            const std::vector<double> &bdy_values_dirichlet);
+  void set_dirichlet_values(const std::vector<double> &bdy_values_dirichlet);
 
   // Set Neumann boundary markers.
   void set_neumann_markers(const std::vector<int> &bdy_markers_neumann);
@@ -118,7 +117,7 @@ public:
   // Get matrix solver.
   MatrixSolverType get_matrix_solver();
 
-  // Perform basic sanity checks, create mesh, perform 
+  // Perform basic sanity checks, create mesh, perform
   // uniform refinements, create space, register weak forms.
   bool create_space_and_forms();
 
@@ -137,8 +136,8 @@ protected:
   int init_ref_num;
   int init_p;
   std::vector<int> mat_markers;                // Array of material markers (>= 0).
-                                               // Example: [1, 3, 0] 
-  std::vector<int> mat_permut;                 // For a material marker, this array gives 
+                                               // Example: [1, 3, 0]
+  std::vector<int> mat_permut;                 // For a material marker, this array gives
                                                // its index in the list of material constants.
                                                // Example (for the above array): [-1, 0, -1, 1, 2]
   std::vector<double> c1_array;                // Equation parameter c1 (array for all material subdomains).
@@ -152,14 +151,14 @@ protected:
   std::vector<double> bdy_values_neumann;      // List of Neumann boundary values.
   std::vector<int> bdy_markers_newton;         // List of Newton boundary markers.
   std::vector<double_pair> bdy_values_newton;  // List of Newton boundary value pairs.
-  std::vector<int> bc_permut;                  // Boundary conditions are entered in the same order as 
+  std::vector<int> bc_permut;                  // Boundary conditions are entered in the same order as
                                                // boundary markers. The markers need to be integers greater
-                                               // than zero, but otherwise they are the user's choice. 
-                                               // Therefore we introduce a bc_permut array that for any 
-                                               // boundary marker gives its index in the list of boundary 
-                                               // conditions. 
-  MatrixSolverType matrix_solver;              // Possibilities: SOLVER_AMESOS, SOLVER_ZATECOO, 
-                                               // SOLVER_MUMPS, SOLVER_PARDISO, SOLVER_PETSC, 
+                                               // than zero, but otherwise they are the user's choice.
+                                               // Therefore we introduce a bc_permut array that for any
+                                               // boundary marker gives its index in the list of boundary
+                                               // conditions.
+  MatrixSolverType matrix_solver;              // Possibilities: SOLVER_AMESOS, SOLVER_ZATECOO,
+                                               // SOLVER_MUMPS, SOLVER_PARDISO, SOLVER_PETSC,
                                                // SOLVER_SUPERLU, SOLVER_UMFPACK.
 
   // Finite element mesh.
@@ -184,3 +183,4 @@ see http://hpfem.org/hermes/doc/src/hermes2d/tutorial-1/mesh.html.
 "\na = 1.0  # size of the mesh\nb = sqrt(2)/2\n\nvertices =\n{\n  { 0, -a },    # vertex 0\n  { a, -a },    # vertex 1\n  { -a, 0 },    # vertex 2\n  { 0, 0 },     # vertex 3\n  { a, 0 },     # vertex 4\n  { -a, a },    # vertex 5\n  { 0, a },     # vertex 6\n  { a*b, a*b }  # vertex 7\n}\n\nelements =\n{\n  { 0, 1, 4, 3, 0 },  # quad 0\n  { 3, 4, 7, 0 },     # tri 1\n  { 3, 7, 6, 0 },     # tri 2\n  { 2, 3, 6, 5, 0 }   # quad 3\n}\n\nboundaries =\n{\n  { 0, 1, 1 },\n  { 1, 4, 2 },\n  { 3, 0, 4 },\n  { 4, 7, 2 },\n  { 7, 6, 2 },\n  { 2, 3, 4 },\n  { 6, 5, 2 },\n  { 5, 2, 3 }\n}\n\ncurves =\n{\n  { 4, 7, 45 },  # +45 degree circular arcs\n  { 7, 6, 45 }\n}\n"
 
  */
+

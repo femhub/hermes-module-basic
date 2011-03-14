@@ -86,7 +86,7 @@
     info("bdy_values_dirichlet[%d]: %g", i, tmp);
     bdy_values_dirichlet.push_back(tmp);
   }
-  if (n_bc_dirichlet > 0) B.set_dirichlet_values(bdy_markers_dirichlet, bdy_values_dirichlet);
+  if (n_bc_dirichlet > 0) B.set_dirichlet_values(bdy_values_dirichlet);
 
   // Read Neumann boundary markers.
   int n_bc_neumann;
@@ -134,3 +134,4 @@
     bdy_values_newton.push_back(std::make_pair(tmp1, tmp2));
   }
   if (n_bc_newton > 0) B.set_newton_values(bdy_values_newton);
+

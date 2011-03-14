@@ -21,7 +21,7 @@ cdef extern from "hermes_basic/basic.h":
         void set_c4_array(vector[double] &c4_array)
         void set_c5_array(vector[double] &c5_array)
         void set_dirichlet_markers(vector[int] &bdy_markers_dirichlet)
-        void set_dirichlet_values(vector[int] &bdy_markers_dirichlet, vector[double] &bdy_values_dirichlet)
+        void set_dirichlet_values(vector[double] &bdy_values_dirichlet)
         void set_neumann_markers(vector[int] &bdy_markers_neumann)
         void set_neumann_values(vector[double] &bdy_values_neumann)
         void set_newton_markers(vector[int] &bdy_markers_newton)
@@ -31,3 +31,4 @@ cdef extern from "hermes_basic/basic.h":
         void get_solution(Solution* s)
         #void get_space(Space* s)
         bool calculate()
+
