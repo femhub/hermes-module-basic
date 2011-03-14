@@ -98,13 +98,12 @@ void ModuleBasic::set_initial_poly_degree(int p)
 }
 
 // Set material markers, and check compatibility with mesh file.
-void ModuleBasic::set_material_markers(const std::vector<int> &m_markers)
+void ModuleBasic::set_material_markers(const std::vector<int> &mat_markers)
 {
-  this->mat_markers = m_markers;
+  this->mat_markers = mat_markers;
+
   // FIXME: these global arrays need to be removed.
-  for (unsigned int i = 0; i < m_markers.size(); i++) {
-    _global_mat_markers.push_back(m_markers[i]);;
-  }
+  _global_mat_markers = mat_markers;
 }
 
 // Set c1 array.
@@ -175,42 +174,32 @@ void ModuleBasic::set_dirichlet_values(const std::vector<double> &bdy_values_dir
 void ModuleBasic::set_neumann_markers(const std::vector<int> &bdy_markers_neumann)
 {
   this->bdy_markers_neumann = bdy_markers_neumann;
-  Hermes::vector<int> t;
-  for (unsigned int i = 0; i < bdy_markers_neumann.size(); i++) {
-    t.push_back(bdy_markers_neumann[i]);
-  }
-  this->bc_types.add_bc_neumann(t);
+  this->bc_types.add_bc_neumann(bdy_markers_neumann);
 }
 
 // Set Neumann boundary values.
 void ModuleBasic::set_neumann_values(const std::vector<double> &bdy_values_neumann)
 {
   this->bdy_values_neumann = bdy_values_neumann;
+
   // FIXME: these global arrays need to be removed.
-  for (unsigned int i = 0; i < bdy_values_neumann.size(); i++) {
-    _global_bdy_values_neumann.push_back(bdy_values_neumann[i]);
-  }
+  _global_bdy_values_neumann = bdy_values_neumann;
 }
 
 // Set Newton boundary markers.
 void ModuleBasic::set_newton_markers(const std::vector<int> &bdy_markers_newton)
 {
   this->bdy_markers_newton = bdy_markers_newton;
-  Hermes::vector<int> t;
-  for (unsigned int i = 0; i < bdy_markers_newton.size(); i++) {
-    t.push_back(bdy_markers_newton[i]);
-  }
-  this->bc_types.add_bc_newton(t);
+  this->bc_types.add_bc_newton(bdy_markers_newton);
 }
 
 // Set Newton boundary values.
 void ModuleBasic::set_newton_values(const std::vector<double_pair> &bdy_values_newton)
 {
   this->bdy_values_newton = bdy_values_newton;
+
   // FIXME: these global arrays need to be removed.
-  for (unsigned int i = 0; i < bdy_values_newton.size(); i++) {
-    _global_bdy_values_newton.push_back(bdy_values_newton[i]);
-  }
+  _global_bdy_values_newton = bdy_values_newton;
 }
 
 // Sanity check of material markers and material constants.
@@ -268,7 +257,6 @@ int ModuleBasic::get_num_base_elements()
 {
   return this->mesh->get_num_base_elements();
 }
-
 
 // Set matrix solver.
 void ModuleBasic::set_matrix_solver(std::string solver_name)
