@@ -30,4 +30,5 @@ src/tests/CMakeFiles/
 src/tests/CTestTestfile.cmake
 src/tests/Makefile
 src/tests/cmake_install.cmake
+src/tests/test-module-basic
 
