@@ -1,3 +1,25 @@
+
+Ext.ns("FEMhub.views");
+
+FEMhub.View3D = Ext.extend(Ext.BoxComponent, {
+
+    onRender: function() {
+        FEMhub.View3D.superclass.onRender.apply(this, arguments);
+        this.view3d = new FEMhub.views.View3D({el: this.el});
+    },
+
+    onResize: function(adjWidth, adjHeight, rawWidth, rawHeight) {
+        FEMhub.View3D.superclass.onResize.apply(this, arguments);
+        this.view3d.resize(adjWidth, adjHeight);
+    },
+
+    renderDataset: function(dataset, fn, scope) {
+        return this.view3d.render(dataset, fn, scope);
+    },
+});
+
+////////////////////////////////////////////////
+
 Ext.ns("FEMhub.ModuleBasic");
 
 FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
@@ -28,6 +50,9 @@ FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
             FEMhub.log("Tab changed, refreshing the flex mesh editor.");
             this.mesh_editor.reload_flash();
         }, this);
+
+        this.view3d = new FEMhub.View3D();
+        this.computation_result.add(this.view3d);
     },
 
     save_bc_dirichlet: function ()
@@ -291,8 +316,8 @@ Boundary conditions
         // between using this.mesh_editor.get_mesh(), see below)
         this.sourcecode = FEMhub.join(
 "from hermes2d.hermes2d import Linearizer",
-"from hermes2d.plot import sln2png, plot_sln_mayavi",
-"from femhub.plot import return_mayavi_figure",
+"#from hermes2d.plot import sln2png, plot_sln_mayavi",
+"#from femhub.plot import return_mayavi_figure",
 "from basic import ModuleBasic",
 "",
 "mesh = '''",
@@ -313,7 +338,7 @@ Boundary conditions
 "    e.set_c4_array([" + Mat_c4_val + "])",
 "    e.set_c5_array([" + Mat_c5_val + "])",
 "    e.set_dirichlet_markers([" + BC_dir_marker_val + "])",
-"    e.set_dirichlet_values([" + BC_dir_marker_val + "], [" + BC_dir_value_val + "])",
+"    e.set_dirichlet_values([" + BC_dir_value_val + "])",
 "    e.set_neumann_markers([" + BC_neumann_marker_val + "])",
 "    e.set_neumann_values([" + BC_neumann_value_val + "])",
 "    e.set_newton_markers([" + BC_newton_marker_val + "])",
@@ -327,8 +352,14 @@ Boundary conditions
 "    return sln",
 "",
 "def plot_sln(sln):",
-"    fig = plot_sln_mayavi(sln, offscreen=True)",
-"    return_mayavi_figure(fig)");
+"    lin = Linearizer()",
+"    lin.process_solution(sln)",
+"    lin.save_data_json('dataset.json', True)",
+"    f = open('dataset.json')",
+"    print f.read()");
+//"",
+//"    fig = plot_sln_mayavi(sln, offscreen=True)",
+//"    return_mayavi_figure(fig)");
 
         this.sourcecode_generated = String.format(this.sourcecode, this.mesh_editor.get_mesh());
 
@@ -359,7 +390,7 @@ Boundary conditions
 
     display_results: function(result) {
         FEMhub.log("Results received");
-        FEMhub.log(result);
+        //FEMhub.log(result);
         //this.main_tabs.setActiveTab(3);
         var d_log = this.computation_log;
         if (result.traceback_html) {
@@ -367,9 +398,11 @@ Boundary conditions
             d_log.update("Python traceback:<br/><pre>" + result.traceback_html + "</pre>");
             FEMhub.log(result.traceback_html);
         } else {
-            var data = result.plots[0].data;
-            d_res = this.computation_result;
-            d_res.update('<table height="100%" width="100%" border="0"><tr><td valign="middle" align="center"><img src="data:image/png;base64,' + data + '"/></td></tr></table>');
+            var dataset = JSON.parse(result.out);
+            this.view3d.renderDataset(dataset);
+            //var data = result.plots[0].data;
+            //d_res = this.computation_result;
+            //d_res.update('<table height="100%" width="100%" border="0"><tr><td valign="middle" align="center"><img src="data:image/png;base64,' + data + '"/></td></tr></table>');
         }
     }
 
@@ -459,17 +492,16 @@ FEMhub.ModuleBasic.Engine = Ext.extend(Ext.util.Observable, {
             source: config.source
         }, {
             okay: function(result) {
-                FEMhub.log("CODE FOR ENGINE:");
-                FEMhub.log(config.source);
+                //FEMhub.log("CODE FOR ENGINE:");
+                //FEMhub.log(config.source);
                 FEMhub.log("Evaluate succeeded");
                 this.fireEvent("evaluate_finished", result);
                 if (Ext.isDefined(config.done)) {
                     config.done.call(config.scope, result);
                 }
             },
-            fail: function() {
-                FEMhub.msg.info("Error", "Evaluate failed (engine was killed)");
-                FEMhub.log("Evaluate failed");
+            fail: function(reason) {
+                FEMhub.log("Evaluate failed: " + reason);
             },
             scope: this,
             status: {
