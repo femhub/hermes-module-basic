@@ -165,6 +165,10 @@ protected:
   // Finite element mesh.
   Mesh* mesh;
 
+  // Essential boundary conditions.
+  EssentialBCConstant* essential_bc_constant;
+  EssentialBCs* essential_bcs;
+
   // Finite element space;
   H1Space* space;
 

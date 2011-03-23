@@ -6,11 +6,6 @@
 // of the basic module at the same time -- their global variables 
 // would interfere with each other.
 Hermes::vector<int> _global_mat_markers;
-std::vector<double> _global_c1_array;
-std::vector<double> _global_c2_array;
-std::vector<double> _global_c3_array;
-std::vector<double> _global_c4_array;
-std::vector<double> _global_c5_array;
 std::vector<double> _global_bdy_values_dirichlet;
 std::vector<double> _global_bdy_values_neumann;
 std::vector<double_pair> _global_bdy_values_newton;
@@ -40,6 +35,8 @@ ModuleBasic::ModuleBasic()
   this->space = NULL;
   this->sln = new Solution();
   this->wf = NULL;
+  this->essential_bc_constant = NULL;
+  this->essential_bcs = NULL;
   this->assembly_time = 0;
   this->solver_time = 0;
 
@@ -113,41 +110,35 @@ void ModuleBasic::set_c1_array(const std::vector<double> &c1_array)
   int n = c2_array.size();
   for (int i = 0; i < n; i++) 
   if (c2_array[i] <= 1e-10) error("The c1 array needs to be positive.");
-  this->c1_array = c1_array;
-  // FIXME: these global arrays need to be removed.
-  _global_c1_array = c1_array;
+  this->wf->set_c1_array(c1_array);
 }
 
 // Set c2 array.
 void ModuleBasic::set_c2_array(const std::vector<double> &c2_array)
 {
   this->c2_array = c2_array;
-  // FIXME: these global arrays need to be removed.
-  _global_c2_array = c2_array;
+  this->wf->set_c2_array(c2_array);
 }
 
 // Set c3 array.
 void ModuleBasic::set_c3_array(const std::vector<double> &c3_array)
 {
   this->c3_array = c3_array;
-  // FIXME: these global arrays need to be removed.
-  _global_c3_array = c3_array;
+  this->wf->set_c3_array(c3_array);
 }
 
 // Set c4 array.
 void ModuleBasic::set_c4_array(const std::vector<double> &c4_array)
 {
   this->c4_array = c4_array;
-  // FIXME: these global arrays need to be removed.
-  _global_c4_array = c4_array;
+  this->wf->set_c4_array(c4_array);
 }
 
 // Set c5 array.
 void ModuleBasic::set_c5_array(const std::vector<double> &c5_array)
 {
   this->c5_array = c5_array;
-  // FIXME: these global arrays need to be removed.
-  _global_c5_array = c5_array;
+  this->wf->set_c5_array(c5_array);
 }
 
 // Set Dirichlet boundary markers.

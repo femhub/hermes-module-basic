@@ -1,3 +1,27 @@
+// Weak forms for module Basic.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Weak form (volumetric, left-hand side).
 template<typename Real, typename Scalar>
 Scalar bilinear_form_vol(int n, double *wt, Func<Real> *u_ext[], Func<Real> *u, Func<Real> *v, 
