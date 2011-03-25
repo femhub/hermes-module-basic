@@ -66,17 +66,17 @@ def main():
     solver_name = "umfpack"   # choose from amesos, aztecoo, mumps, petsc, superlu, umfpack
     e.set_matrix_solver(solver_name)
     print "Matrix solver:", solver_name
-    e.set_material_markers([0])
+    e.set_material_markers(["0"])
     e.set_c1_array([1])
     e.set_c2_array([0])
     e.set_c3_array([0])
     e.set_c4_array([0])
     e.set_c5_array([1])
-    e.set_dirichlet_markers([4])
+    e.set_dirichlet_markers(["4"])
     e.set_dirichlet_values([4], [0])
-    e.set_neumann_markers([1, 3])
+    e.set_neumann_markers(["1", "3"])
     e.set_neumann_values([0, 0])
-    e.set_newton_markers([2])
+    e.set_newton_markers(["2"])
     e.set_newton_values( [(1, 1)] )
 
     success = e.calculate()

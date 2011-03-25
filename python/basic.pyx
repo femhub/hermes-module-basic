@@ -1,5 +1,6 @@
 from numpy cimport ndarray
 from libcpp.vector cimport vector
+#from libcpp.string cimport string
 from libcpp.pair cimport pair
 
 cimport basic_defs
@@ -14,6 +15,12 @@ cdef vector[int] array2vector_int(a):
 
 cdef vector[double] array2vector_double(a):
     cdef vector[double] v
+    for i in range(len(a)):
+        v.push_back(a[i])
+    return v
+
+cdef vector[char *] array2vector_string(a):
+    cdef vector[char *] v
     for i in range(len(a)):
         v.push_back(a[i])
     return v
@@ -47,7 +54,7 @@ cdef class ModuleBasic:
         self.thisptr.set_matrix_solver(solver_name)
 
     def set_material_markers(self, mat_markers):
-        self.thisptr.set_material_markers(array2vector_int(mat_markers))
+        self.thisptr.set_material_markers(array2vector_string(mat_markers))
 
     def set_c1_array(self, c1_array):
         self.thisptr.set_c1_array(array2vector_double(c1_array))
@@ -65,19 +72,19 @@ cdef class ModuleBasic:
         self.thisptr.set_c5_array(array2vector_double(c5_array))
 
     def set_dirichlet_markers(self, bdy_markers_dirichlet):
-        self.thisptr.set_dirichlet_markers(array2vector_int(bdy_markers_dirichlet))
+        self.thisptr.set_dirichlet_markers(array2vector_string(bdy_markers_dirichlet))
 
     def set_dirichlet_values(self,  bdy_markers_dirichlet, bdy_values_dirichlet):
-        self.thisptr.set_dirichlet_values(array2vector_int(bdy_markers_dirichlet), array2vector_double(bdy_values_dirichlet))
+        self.thisptr.set_dirichlet_values(array2vector_double(bdy_values_dirichlet))
 
     def set_neumann_markers(self, bdy_markers_neumann):
-        self.thisptr.set_neumann_markers(array2vector_int(bdy_markers_neumann))
+        self.thisptr.set_neumann_markers(array2vector_string(bdy_markers_neumann))
 
     def set_neumann_values(self, bdy_values_neumann):
         self.thisptr.set_neumann_values(array2vector_double(bdy_values_neumann))
 
     def set_newton_markers(self, bdy_markers_newton):
-        self.thisptr.set_newton_markers(array2vector_int(bdy_markers_newton))
+        self.thisptr.set_newton_markers(array2vector_string(bdy_markers_newton))
 
     def set_newton_values(self, bdy_values_newton):
         vvv = array2vector_double_pair(bdy_values_newton)
