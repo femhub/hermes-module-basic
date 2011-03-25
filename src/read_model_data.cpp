@@ -6,12 +6,12 @@
   if(!Get(f, &n_mat_markers)) error("Could not read number of material markers.");
   info("n_mat_markers: %d", n_mat_markers);
   if(n_mat_markers <= 0) error("At least one material marker must be given.");
-  Hermes::vector<int> mat_markers;
+  Hermes::vector<std::string> mat_markers;
   for (int i = 0; i < n_mat_markers; i++) {
-    int tmp;
-    if(!Get(f, &tmp)) error("Could not read a material marker.");
+    char tmp[100];
+    if(!Get(f, tmp)) error("Could not read a material marker.");
     info("mat_marker[%d]: %d", i, tmp);
-    mat_markers.push_back(tmp);
+    mat_markers.push_back((std::string)tmp);
   }
   B.set_material_markers(mat_markers);
 
@@ -69,12 +69,12 @@
   int n_bc_dirichlet;
   if(!Get(f, &n_bc_dirichlet)) error("Could not read number of Dirichlet boundary markers.");
   info("n_bc_dirichlet: %d", n_bc_dirichlet);
-  Hermes::vector<int> bdy_markers_dirichlet;
+Hermes::vector<std::string> bdy_markers_dirichlet;
   for (int i = 0; i < n_bc_dirichlet; i++) {
-    int tmp;
-    if(!Get(f, &tmp)) error("Could not read a VALUE boundary marker.");
+    char tmp[100];
+    if(!Get(f, tmp)) error("Could not read an Dirichlet boundary marker.");
     info("bdy_markers_dirichlet[%d]: %d", i, tmp);
-    bdy_markers_dirichlet.push_back(tmp);
+    bdy_markers_dirichlet.push_back((std::string)tmp);
   }
   if (n_bc_dirichlet > 0) B.set_dirichlet_markers(bdy_markers_dirichlet);
 
@@ -86,18 +86,18 @@
     info("bdy_values_dirichlet[%d]: %g", i, tmp);
     bdy_values_dirichlet.push_back(tmp);
   }
-  if (n_bc_dirichlet > 0) B.set_dirichlet_values(bdy_markers_dirichlet, bdy_values_dirichlet);
+  if (n_bc_dirichlet > 0) B.set_dirichlet_values(bdy_values_dirichlet);
 
   // Read Neumann boundary markers.
   int n_bc_neumann;
   if(!Get(f, &n_bc_neumann)) error("Could not read number of Neumann boundary markers.");
   info("n_bc_neumann: %d", n_bc_neumann);
-  Hermes::vector<int> bdy_markers_neumann;
+Hermes::vector<std::string> bdy_markers_neumann;
   for (int i = 0; i < n_bc_neumann; i++) {
-    int tmp;
-    if(!Get(f, &tmp)) error("Could not read a Neumann boundary marker.");
+    char tmp[100];
+    if(!Get(f, tmp)) error("Could not read a Neumann boundary marker.");
     info("bdy_markers_neumann[%d]: %d", i, tmp);
-    bdy_markers_neumann.push_back(tmp);
+    bdy_markers_neumann.push_back((std::string)tmp);
   }
   if (n_bc_neumann > 0) B.set_neumann_markers(bdy_markers_neumann);
 
@@ -115,12 +115,12 @@
   int n_bc_newton;
   if(!Get(f, &n_bc_newton)) error("Could not read number of Newton boundary markers.");
   info("n_bc_newton: %d", n_bc_newton);
-  Hermes::vector<int> bdy_markers_newton;
+Hermes::vector<std::string> bdy_markers_newton;
   for (int i = 0; i < n_bc_newton; i++) {
-    int tmp;
-    if(!Get(f, &tmp)) error("Could not read a Newton boundary marker.");
+    char tmp[100];
+    if(!Get(f, tmp)) error("Could not read a Newton boundary marker.");
     info("bdy_markers_newton[%d]: %d", i, tmp);
-    bdy_markers_newton.push_back(tmp);
+    bdy_markers_newton.push_back((std::string)tmp);
   }
   if (n_bc_newton > 0) B.set_newton_markers(bdy_markers_newton);
 

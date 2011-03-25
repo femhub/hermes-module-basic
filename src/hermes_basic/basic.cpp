@@ -90,9 +90,9 @@ void ModuleBasic::set_initial_poly_degree(int p)
 }
 
 // Set material markers, and check compatibility with mesh file.
-void ModuleBasic::set_material_markers(const std::vector<std_string> &m_markers)
+void ModuleBasic::set_material_markers(const std::vector<std::string> &mat_markers)
 {  
-  this->wf->set_material_markers(m_markers);
+  this->wf->set_material_markers(mat_markers);
 }
 
 // Set c1 array.
@@ -130,7 +130,7 @@ void ModuleBasic::set_c5_array(const std::vector<double> &c5_array)
 }
 
 // Set Dirichlet boundary markers.
-void ModuleBasic::set_dirichlet_markers(const std::vector<std_string> &bdy_markers_dirichlet)
+void ModuleBasic::set_dirichlet_markers(const std::vector<std::string> &bdy_markers_dirichlet)
 {
   for (unsigned int i = 0; i < bdy_markers_dirichlet.size(); i++) {
     this->bdy_markers_dirichlet.push_back(bdy_markers_dirichlet[i]);
@@ -146,7 +146,7 @@ void ModuleBasic::set_dirichlet_values(const std::vector<double> &bdy_values_dir
 }
 
 // Set Neumann boundary markers.
-void ModuleBasic::set_neumann_markers(const std::vector<std_string> &bdy_markers_neumann)
+void ModuleBasic::set_neumann_markers(const std::vector<std::string> &bdy_markers_neumann)
 {
   this->wf->set_neumann_markers(bdy_markers_neumann);
 }
@@ -158,7 +158,7 @@ void ModuleBasic::set_neumann_values(const std::vector<double> &bdy_values_neuma
 }
 
 // Set Newton boundary markers.
-void ModuleBasic::set_newton_markers(const std::vector<std_string> &bdy_markers_newton)
+void ModuleBasic::set_newton_markers(const std::vector<std::string> &bdy_markers_newton)
 {
   this->wf->set_newton_markers(bdy_markers_newton);
 }
@@ -255,7 +255,7 @@ bool ModuleBasic::create_space_and_forms()
   /* SANITY CHECKS */
 
   // Sanity check of material markers and material constants.
-  this->wf->materials_sanity_check();
+  this->wf->sanity_check();
 
   // Check whether the number of base elements is greater than zero.
   if (this->get_num_base_elements() <= 0) {
@@ -269,14 +269,14 @@ bool ModuleBasic::create_space_and_forms()
   for (int i = 0; i < this->init_ref_num; i++) this->mesh->refine_all_elements();
 
   // Initialize boundary conditions.
-  Hermes::vector<DefaultEssentialBCConst*> bc_essential_array = Hermes::vector<DefaultEssentialBCConst*>();
-  for (int i=0; i<bdy_markers_dirichlet.size(); i++) {
+  Hermes::vector<EssentialBC*> bc_essential_array = Hermes::vector<EssentialBC*>();
+  for (unsigned int i=0; i<bdy_markers_dirichlet.size(); i++) {
     bc_essential_array.push_back(new DefaultEssentialBCConst(bdy_markers_dirichlet[i], bdy_values_dirichlet[i]));
   }
   EssentialBCs* bcs = new EssentialBCs(bc_essential_array);
 
   // Create an H1 space with default shapeset.
-  this->space = new H1Space(this->mesh, this->bcs, this->init_p);
+  this->space = new H1Space(this->mesh, bcs, this->init_p);
   int ndof = Space::get_num_dofs(this->space);
   info("ndof = %d", ndof);
   if (ndof <= 0) return false;

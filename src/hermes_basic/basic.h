@@ -54,7 +54,7 @@ public:
   void set_initial_poly_degree(int p);
 
   // Set material markers. These markers define subdomains.
-  void set_material_markers(const std::vector<int> &mat_markers);
+  void set_material_markers(const std::vector<std::string> &mat_markers);
 
   // Set parameter c1 for all material subdomains.
   void set_c1_array(const std::vector<double> &c1_array);
@@ -72,22 +72,25 @@ public:
   void set_c5_array(const std::vector<double> &c5_array);
 
   // Set Dirichlet boundary markers.
-  void set_dirichlet_markers(const std::vector<int> &bdy_markers_dirichlet);
+  void set_dirichlet_markers(const std::vector<std::string> &bdy_markers_dirichlet);
 
   // Set Dirichlet boundary values.
   void set_dirichlet_values(const std::vector<double> &bdy_values_dirichlet);
 
   // Set Neumann boundary markers.
-  void set_neumann_markers(const std::vector<int> &bdy_markers_neumann);
+  void set_neumann_markers(const std::vector<std::string> &bdy_markers_neumann);
 
   // Set Neumann boundary values.
   void set_neumann_values(const std::vector<double> &bdy_values_neumann);
 
   // Set Newton boundary markers.
-  void set_newton_markers(const std::vector<int> &bdy_markers_newton);
+  void set_newton_markers(const std::vector<std::string> &bdy_markers_newton);
 
   // Set Newton boundary value pairs.
   void set_newton_values(const std::vector<double_pair> &bdy_values_newton);
+
+  // Sanity check.
+  void sanity_check();
 
   // Setting mesh.
   void set_mesh(Mesh* m);
