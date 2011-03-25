@@ -427,11 +427,64 @@ FEMhub.ModuleBasicWindowUi = Ext.extend(Ext.Window, {
                                         height: 390,
                                         width: 100,
                                         itemId: 'computation_result',
-                                        autoScroll: true,
-                                        padding: 10,
+                                        autoScroll: false,
                                         region: 'center',
                                         ref: '../../../computation_result',
-                                        id: 'computation_result'
+                                        id: 'computation_result',
+                                        tbar: {
+                                            xtype: 'toolbar',
+                                            enableOverflow: true,
+                                            items: [{
+                                                //cls: 'x-btn-text-icon',
+                                                text: 'Mode 3D',
+                                                handler: function() {
+                                                    this.view.setMode3D();
+                                                },
+                                                scope: this,
+                                            }, '-', {
+                                                //cls: 'x-btn-text-icon',
+                                                text: 'Center',
+                                                handler: function() {
+                                                    this.view.doCenterScene();
+                                                },
+                                                scope: this,
+                                            }, {
+                                                //cls: 'x-btn-text-icon',
+                                                text: 'Save',
+                                                handler: function() {
+                                                    this.view.doSaveScene();
+                                                },
+                                                scope: this,
+                                            }, '-', {
+                                                //cls: 'x-btn-text-icon',
+                                                text: 'Outline',
+                                                handler: function() {
+                                                    this.view.setShowOutline();
+                                                },
+                                                scope: this,
+                                            }, {
+                                                //cls: 'x-btn-text-icon',
+                                                text: 'Bounds',
+                                                handler: function() {
+                                                    this.view.setShowBounds();
+                                                },
+                                                scope: this,
+                                            }, {
+                                                //cls: 'x-btn-text-icon',
+                                                text: 'Edges',
+                                                handler: function() {
+                                                    this.view.setShowEdges();
+                                                },
+                                                scope: this,
+                                            }, {
+                                                //cls: 'x-btn-text-icon',
+                                                text: 'Wireframe',
+                                                handler: function() {
+                                                    this.view.setWireframe();
+                                                },
+                                                scope: this,
+                                            }]
+                                        }
                                     },
                                     {
                                         xtype: 'panel',
