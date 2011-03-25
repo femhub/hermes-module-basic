@@ -1,25 +1,4 @@
 
-Ext.ns("FEMhub.views");
-
-FEMhub.View3D = Ext.extend(Ext.BoxComponent, {
-
-    onRender: function() {
-        FEMhub.View3D.superclass.onRender.apply(this, arguments);
-        this.view3d = new FEMhub.views.View3D({el: this.el});
-    },
-
-    onResize: function(adjWidth, adjHeight, rawWidth, rawHeight) {
-        FEMhub.View3D.superclass.onResize.apply(this, arguments);
-        this.view3d.resize(adjWidth, adjHeight);
-    },
-
-    renderDataset: function(dataset, fn, scope) {
-        return this.view3d.render(dataset, fn, scope);
-    },
-});
-
-////////////////////////////////////////////////
-
 Ext.ns("FEMhub.ModuleBasic");
 
 FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
@@ -51,8 +30,8 @@ FEMhub.ModuleBasic.BasicWindow = Ext.extend(FEMhub.ModuleBasicWindowUi, {
             this.mesh_editor.reload_flash();
         }, this);
 
-        this.view3d = new FEMhub.View3D();
-        this.computation_result.add(this.view3d);
+        this.view = new FEMhub.views.WebGLViewComponent();
+        this.computation_result.add(this.view);
     },
 
     save_bc_dirichlet: function ()
@@ -398,8 +377,8 @@ Boundary conditions
             d_log.update("Python traceback:<br/><pre>" + result.traceback_html + "</pre>");
             FEMhub.log(result.traceback_html);
         } else {
-            var dataset = JSON.parse(result.out);
-            this.view3d.renderDataset(dataset);
+            var dataset = result.out;
+            this.view.plot(dataset);
             //var data = result.plots[0].data;
             //d_res = this.computation_result;
             //d_res.update('<table height="100%" width="100%" border="0"><tr><td valign="middle" align="center"><img src="data:image/png;base64,' + data + '"/></td></tr></table>');
