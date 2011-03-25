@@ -351,7 +351,7 @@ Boundary conditions
                     statusbar_text: "Calculating...",
                     done: function (result) {
                         var d_log = this.computation_log;
-                        var output = result.out;
+                        var output = FEMhub.util.ANSI.strip(result.out);
                         d_log.update('<b>Computation log</b>:<br><br><pre>' + output + '</pre>');
                         this.engine.evaluate({
                             source: "plot_sln(sln)",
