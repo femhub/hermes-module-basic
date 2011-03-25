@@ -31,9 +31,9 @@ Build the Module
 ----------------
 
 For this, install the Hermes library first - only the 2D version 
-without examples and benchmarks is enough. Change dir to your local 
-Hermes repository, for example /home/pavel/repos/hermes/. Add to your 
-CMake.vars file the lines
+without tutorial, examples and benchmarks is enough. Change dir to 
+your local Hermes repository, for example /home/pavel/repos/hermes/. 
+Add to your CMake.vars file the lines
 
 set(WITH_H1D NO)
 set(WITH_H3D NO)
