@@ -1,6 +1,6 @@
 from numpy cimport ndarray
 from libcpp.vector cimport vector
-#from libcpp.string cimport string
+from libcpp.string cimport string
 from libcpp.pair cimport pair
 
 cimport basic_defs
@@ -19,8 +19,8 @@ cdef vector[double] array2vector_double(a):
         v.push_back(a[i])
     return v
 
-cdef vector[char *] array2vector_string(a):
-    cdef vector[char *] v
+cdef vector[string] array2vector_string(a):
+    cdef vector[string] v
     for i in range(len(a)):
         v.push_back(a[i])
     return v
