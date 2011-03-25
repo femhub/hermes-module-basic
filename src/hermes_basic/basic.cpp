@@ -5,15 +5,9 @@
 // a temporary solution. Like this, one cannot have two instances 
 // of the basic module at the same time -- their global variables 
 // would interfere with each other.
-Hermes::vector<int> _global_mat_markers;
-std::vector<double> _global_bdy_values_dirichlet;
-std::vector<double> _global_bdy_values_neumann;
-std::vector<double_pair> _global_bdy_values_newton;
-BCTypes* _global_bc_types = NULL;
-BCValues* _global_bc_values = NULL;
 
 // Weak forms.
-#include "forms.cpp"
+#include "definitions.cpp"
 
 // Look up an integer number in an array.
 bool find_index(const std::vector<int> &array, int x, int &i_out)
@@ -34,15 +28,11 @@ ModuleBasic::ModuleBasic()
   this->mesh = new Mesh();
   this->space = NULL;
   this->sln = new Solution();
-  this->wf = NULL;
+  this->wf = new CustomWeakFormLinearConst();
   this->essential_bc_constant = NULL;
   this->essential_bcs = NULL;
   this->assembly_time = 0;
   this->solver_time = 0;
-
-  // FIXME: these global arrays need to be removed.
-  _global_bc_types = &(this->bc_types);
-  _global_bc_values = &(this->bc_values);
 }
 
 // Destructor.
@@ -95,54 +85,47 @@ void ModuleBasic::set_initial_poly_degree(int p)
 }
 
 // Set material markers, and check compatibility with mesh file.
-void ModuleBasic::set_material_markers(const std::vector<int> &m_markers)
-{
-  this->mat_markers = m_markers;
-  // FIXME: these global arrays need to be removed.
-  for (unsigned int i = 0; i < m_markers.size(); i++) {
-    _global_mat_markers.push_back(m_markers[i]);;
-  }
+void ModuleBasic::set_material_markers(const std::vector<std_string> &m_markers)
+{  
+  this->wf->set_material_markers(m_markers);
 }
 
 // Set c1 array.
 void ModuleBasic::set_c1_array(const std::vector<double> &c1_array)
 {
-  int n = c2_array.size();
-  for (int i = 0; i < n; i++) 
-  if (c2_array[i] <= 1e-10) error("The c1 array needs to be positive.");
+  int n = c1_array.size();
+  for (int i = 0; i < n; i++) {
+    if (c1_array[i] <= 1e-10) error("The c1 array needs to be positive.");
+  }
   this->wf->set_c1_array(c1_array);
 }
 
 // Set c2 array.
 void ModuleBasic::set_c2_array(const std::vector<double> &c2_array)
 {
-  this->c2_array = c2_array;
   this->wf->set_c2_array(c2_array);
 }
 
 // Set c3 array.
 void ModuleBasic::set_c3_array(const std::vector<double> &c3_array)
 {
-  this->c3_array = c3_array;
   this->wf->set_c3_array(c3_array);
 }
 
 // Set c4 array.
 void ModuleBasic::set_c4_array(const std::vector<double> &c4_array)
 {
-  this->c4_array = c4_array;
   this->wf->set_c4_array(c4_array);
 }
 
 // Set c5 array.
 void ModuleBasic::set_c5_array(const std::vector<double> &c5_array)
 {
-  this->c5_array = c5_array;
   this->wf->set_c5_array(c5_array);
 }
 
 // Set Dirichlet boundary markers.
-void ModuleBasic::set_dirichlet_markers(const std::vector<int> &bdy_markers_dirichlet)
+void ModuleBasic::set_dirichlet_markers(const std::vector<std_string> &bdy_markers_dirichlet)
 {
   //this->bdy_markers_dirichlet = bdy_markers_dirichlet;
   Hermes::vector<int> t;
@@ -169,45 +152,27 @@ void ModuleBasic::set_dirichlet_values(const std::vector<int> &bdy_markers_diric
 }
 
 // Set Neumann boundary markers.
-void ModuleBasic::set_neumann_markers(const std::vector<int> &bdy_markers_neumann)
+void ModuleBasic::set_neumann_markers(const std::vector<std_string> &bdy_markers_neumann)
 {
-  this->bdy_markers_neumann = bdy_markers_neumann;
-  Hermes::vector<int> t;
-  for (unsigned int i = 0; i < bdy_markers_neumann.size(); i++) {
-    t.push_back(bdy_markers_neumann[i]);
-  }
-  this->bc_types.add_bc_neumann(t);
+  this->wf->set_neumann_markers(bdy_markers_neumann);
 }
 
 // Set Neumann boundary values.
 void ModuleBasic::set_neumann_values(const std::vector<double> &bdy_values_neumann)
 {
-  this->bdy_values_neumann = bdy_values_neumann;
-  // FIXME: these global arrays need to be removed.
-  for (unsigned int i = 0; i < bdy_values_neumann.size(); i++) {
-    _global_bdy_values_neumann.push_back(bdy_values_neumann[i]);
-  }
+  this->wf->set_neumann_values(bdy_values_neumann);
 }
 
 // Set Newton boundary markers.
-void ModuleBasic::set_newton_markers(const std::vector<int> &bdy_markers_newton)
+void ModuleBasic::set_newton_markers(const std::vector<std_string> &bdy_markers_newton)
 {
-  this->bdy_markers_newton = bdy_markers_newton;
-  Hermes::vector<int> t;
-  for (unsigned int i = 0; i < bdy_markers_newton.size(); i++) {
-    t.push_back(bdy_markers_newton[i]);
-  }
-  this->bc_types.add_bc_newton(t);
+  this->wf->set_newton_markers(bdy_markers_newton);
 }
 
 // Set Newton boundary values.
 void ModuleBasic::set_newton_values(const std::vector<double_pair> &bdy_values_newton)
 {
-  this->bdy_values_newton = bdy_values_newton;
-  // FIXME: these global arrays need to be removed.
-  for (unsigned int i = 0; i < bdy_values_newton.size(); i++) {
-    _global_bdy_values_newton.push_back(bdy_values_newton[i]);
-  }
+  this->wf->set_newton_values(bdy_values_newton);
 }
 
 // Sanity check of material markers and material constants.
@@ -218,11 +183,6 @@ void ModuleBasic::materials_sanity_check()
   if (this->mat_markers.size() != this->c3_array.size()) error("Wrong length of c3 array.");
   if (this->mat_markers.size() != this->c4_array.size()) error("Wrong length of c4 array.");
   if (this->mat_markers.size() != this->c5_array.size()) error("Wrong length of c5 array.");
-
-  // Making sure that material markers are nonnegative (>= 0).
-  for (unsigned int i = 0; i < this->mat_markers.size(); i++) {
-    if(this->mat_markers[i] < 0) error("Material markers must be nonnegative.");
-  }
 }
 
 // Get mesh string.
@@ -302,11 +262,8 @@ bool ModuleBasic::create_space_and_forms()
 {
   /* SANITY CHECKS */
 
-  // Consistency check of boundary conditions.
-  this->bc_types.check_consistency();
-
   // Sanity check of material markers and material constants.
-  this->materials_sanity_check();
+  this->wf->materials_sanity_check();
 
   // Check whether the number of base elements is greater than zero.
   if (this->get_num_base_elements() <= 0) {
@@ -319,8 +276,15 @@ bool ModuleBasic::create_space_and_forms()
   // Perform initial uniform mesh refinements.
   for (int i = 0; i < this->init_ref_num; i++) this->mesh->refine_all_elements();
 
+  // Initialize boundary conditions.
+  Hermes::vector<DefaultEssentialBCConst*> bc_essential_array = ();
+  for (int i=0; i<bdy_markers_dirichlet.size(); i++) {
+    bc_essential_array.push_back(new DefaultEssentialBCConst(bdy_markers_dirichlet[i], bdy_values_dirichlet[i]));
+  }
+  EssentialBCs* bcs = new EssentialBCs(bc_essential_array);
+
   // Create an H1 space with default shapeset.
-  this->space = new H1Space(this->mesh, &(this->bc_types), &(this->bc_values), this->init_p);
+  this->space = new H1Space(this->mesh, this->bcs, this->init_p);
   int ndof = Space::get_num_dofs(this->space);
   info("ndof = %d", ndof);
   if (ndof <= 0) return false;
@@ -333,16 +297,7 @@ bool ModuleBasic::create_space_and_forms()
   */
 
   // Initialize the weak formulation.
-  this->wf = new WeakForm();
-  this->wf->add_matrix_form(callback(bilinear_form_vol));
-  this->wf->add_vector_form(callback(linear_form_vol));
-  for (unsigned int i=0; i < this->bdy_values_neumann.size(); i++) {
-    this->wf->add_vector_form_surf(callback(linear_form_surf_neumann), this->bdy_markers_neumann[i]);
-  }
-  for (unsigned int i=0; i < this->bdy_values_newton.size(); i++) {
-    this->wf->add_matrix_form_surf(callback(bilinear_form_surf_newton), this->bdy_markers_newton[i]);
-    this->wf->add_vector_form_surf(callback(linear_form_surf_newton), this->bdy_markers_newton[i]);
-  }
+  this->wf->create();
 
   return true;
 }

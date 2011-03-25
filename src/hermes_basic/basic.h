@@ -82,9 +82,6 @@ public:
   // Set Newton boundary value pairs.
   void set_newton_values(const std::vector<double_pair> &bdy_values_newton);
 
-  // Sanity check of material markers and material constants.
-  void materials_sanity_check();
-
   // Setting mesh.
   void set_mesh(Mesh* m);
 
@@ -93,12 +90,6 @@ public:
 
   // Solve the problem and return the solution.
   bool calculate();
-
-  // This class associates BC markers with BC boundary types.
-  BCTypes bc_types;
-
-  // This class provides values for Dirichlet (essential) BC markers.
-  BCValues bc_values;
 
   // Get mesh string.
   const char* get_mesh_string();
@@ -136,22 +127,17 @@ protected:
   std::string mesh_str;
   int init_ref_num;
   int init_p;
+  // Material markers.
   std::vector<int> mat_markers;                // Array of material markers (>= 0).
                                                // Example: [1, 3, 0] 
+  // Permutation vector for  markers.
   std::vector<int> mat_permut;                 // For a material marker, this array gives 
                                                // its index in the list of material constants.
                                                // Example (for the above array): [-1, 0, -1, 1, 2]
-  std::vector<double> c1_array;                // Equation parameter c1 (array for all material subdomains).
-  std::vector<double> c2_array;                // Equation parameter c2 (array for all material subdomains).
-  std::vector<double> c3_array;                // Equation parameter c3 (array for all material subdomains).
-  std::vector<double> c4_array;                // Equation parameter c4 (array for all material subdomains).
-  std::vector<double> c5_array;                // Equation parameter c5 (array for all material subdomains).
+  // Essential boundary conditions.
   std::vector<int> bdy_markers_dirichlet;      // List of Dirichlet boundary markers.
   std::vector<double> bdy_values_dirichlet;    // List of Dirichlet boundary values.
-  std::vector<int> bdy_markers_neumann;        // List of Neumann boundary markers.
-  std::vector<double> bdy_values_neumann;      // List of Neumann boundary values.
-  std::vector<int> bdy_markers_newton;         // List of Newton boundary markers.
-  std::vector<double_pair> bdy_values_newton;  // List of Newton boundary value pairs.
+  // Permutation vector for boundary markers.
   std::vector<int> bc_permut;                  // Boundary conditions are entered in the same order as 
                                                // boundary markers. The markers need to be integers greater
                                                // than zero, but otherwise they are the user's choice. 
@@ -166,14 +152,14 @@ protected:
   Mesh* mesh;
 
   // Essential boundary conditions.
-  EssentialBCConstant* essential_bc_constant;
+  DefaultEssentialBCConst* essential_bc_constant;
   EssentialBCs* essential_bcs;
 
   // Finite element space;
   H1Space* space;
 
   // Weak form.
-  WeakForm* wf;
+  CustomWeakFormLinearConst* wf;
 
   // Solution.
   Solution* sln;
