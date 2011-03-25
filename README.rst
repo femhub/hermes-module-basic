@@ -30,9 +30,20 @@ Newton with piecewise-constant parameters (const_1 u + du/dn = const_2)
 Build the Module
 ----------------
 
-For this, install the Hermes library first. Change dir to your 
-local Hermes repository, for example /home/pavel/repos/hermes/.
-There, either type "sudo make install" to have the Hermes library 
+For this, install the Hermes library first - only the 2D version 
+without examples and benchmarks is enough. Change dir to your local 
+Hermes repository, for example /home/pavel/repos/hermes/. Add to your 
+CMake.vars file the lines
+
+set(WITH_H1D NO)
+set(WITH_H3D NO)
+set(H2D_WITH_TUTORIAL NO)
+set(H2D_WITH_EXAMPLES NO)
+set(H2D_WITH_BENCHMARKS NO)
+
+Remove CMakeChache.txt and rerun "cmake ."
+
+Then, either type "sudo make install" to have the Hermes library 
 installed system-wide (typically into /usr/local/), or add into your 
 CMake.vars file a line::
 
