@@ -1,4 +1,4 @@
-#define HERMES_REPORT_INFO
+#define HERMES_REPORT_ALL
 #define HERMES_REPORT_FILE "application.log"
 
 // The module is a library.
@@ -7,6 +7,14 @@
 #endif
 
 #include "hermes2d.h"
+//#include "/home/pavel/repos/hermes/hermes2d/src/weakform_library/laplace.h"
+//#include "/home/pavel/repos/hermes/hermes2d/src/boundaryconditions/essential_bcs.h"
+//#include "/home/pavel/repos/hermes/hermes2d/src/weakform/weakform.h"
+
+class DefaultEssentialBCConst;
+class EssentialBCs;
+class CustomWeakFormModuleBasic;
+class WeakForm;
 
 // This is a simple generic module for a linear second-order PDE based on the Hermes 
 // library. The purpose of modules like this is to provide a higher-level API where 
@@ -67,8 +75,7 @@ public:
   void set_dirichlet_markers(const std::vector<int> &bdy_markers_dirichlet);
 
   // Set Dirichlet boundary values.
-  void set_dirichlet_values(const std::vector<int> &bdy_markers_dirichlet,
-                            const std::vector<double> &bdy_values_dirichlet);
+  void set_dirichlet_values(const std::vector<double> &bdy_values_dirichlet);
 
   // Set Neumann boundary markers.
   void set_neumann_markers(const std::vector<int> &bdy_markers_neumann);
@@ -128,22 +135,13 @@ protected:
   int init_ref_num;
   int init_p;
   // Material markers.
-  std::vector<int> mat_markers;                // Array of material markers (>= 0).
+  std::vector<std::string> mat_markers;        // Array of material markers (>= 0).
                                                // Example: [1, 3, 0] 
-  // Permutation vector for  markers.
-  std::vector<int> mat_permut;                 // For a material marker, this array gives 
-                                               // its index in the list of material constants.
-                                               // Example (for the above array): [-1, 0, -1, 1, 2]
   // Essential boundary conditions.
-  std::vector<int> bdy_markers_dirichlet;      // List of Dirichlet boundary markers.
-  std::vector<double> bdy_values_dirichlet;    // List of Dirichlet boundary values.
-  // Permutation vector for boundary markers.
-  std::vector<int> bc_permut;                  // Boundary conditions are entered in the same order as 
-                                               // boundary markers. The markers need to be integers greater
-                                               // than zero, but otherwise they are the user's choice. 
-                                               // Therefore we introduce a bc_permut array that for any 
-                                               // boundary marker gives its index in the list of boundary 
-                                               // conditions. 
+  std::vector<std::string> bdy_markers_dirichlet; // List of Dirichlet boundary markers.
+  std::vector<double> bdy_values_dirichlet;       // List of Dirichlet boundary values.
+
+  // Matrix solver.
   MatrixSolverType matrix_solver;              // Possibilities: SOLVER_AMESOS, SOLVER_ZATECOO, 
                                                // SOLVER_MUMPS, SOLVER_PARDISO, SOLVER_PETSC, 
                                                // SOLVER_SUPERLU, SOLVER_UMFPACK.
@@ -159,7 +157,7 @@ protected:
   H1Space* space;
 
   // Weak form.
-  CustomWeakFormLinearConst* wf;
+  CustomWeakFormModuleBasic* wf;
 
   // Solution.
   Solution* sln;

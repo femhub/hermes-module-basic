@@ -23,14 +23,19 @@ bool find_index(const std::vector<int> &array, int x, int &i_out)
 // Constructor.
 ModuleBasic::ModuleBasic()
 {
+  this->mesh_str = "";
   this->init_ref_num = -1;
   this->init_p = -1;
+  this->mat_markers = std::vector<std::string>();
+  this->bdy_markers_dirichlet = std::vector<std::string>();
+  this->bdy_values_dirichlet = std::vector<double>();
+  this->matrix_solver = SOLVER_UMFPACK;
   this->mesh = new Mesh();
-  this->space = NULL;
-  this->sln = new Solution();
-  this->wf = new CustomWeakFormLinearConst();
   this->essential_bc_constant = NULL;
   this->essential_bcs = NULL;
+  this->space = NULL;
+  this->wf = new CustomWeakFormModuleBasic();
+  this->sln = new Solution();
   this->assembly_time = 0;
   this->solver_time = 0;
 }
@@ -127,28 +132,17 @@ void ModuleBasic::set_c5_array(const std::vector<double> &c5_array)
 // Set Dirichlet boundary markers.
 void ModuleBasic::set_dirichlet_markers(const std::vector<std_string> &bdy_markers_dirichlet)
 {
-  //this->bdy_markers_dirichlet = bdy_markers_dirichlet;
-  Hermes::vector<int> t;
   for (unsigned int i = 0; i < bdy_markers_dirichlet.size(); i++) {
-    t.push_back(bdy_markers_dirichlet[i]);
+    this->bdy_markers_dirichlet.push_back(bdy_markers_dirichlet[i]);
   }
-  this->bc_types.add_bc_dirichlet(t);
 }
 
 // Set Dirichlet boundary values.
-void ModuleBasic::set_dirichlet_values(const std::vector<int> &bdy_markers_dirichlet,
-                                       const std::vector<double> &bdy_values_dirichlet)
+void ModuleBasic::set_dirichlet_values(const std::vector<double> &bdy_values_dirichlet)
 {
-  Hermes::vector<int> tm;
-  for (unsigned int i = 0; i < bdy_markers_dirichlet.size(); i++) {
-    tm.push_back(bdy_markers_dirichlet[i]);
-  }
-  Hermes::vector<double> tv;
   for (unsigned int i = 0; i < bdy_values_dirichlet.size(); i++) {
-    tv.push_back(bdy_values_dirichlet[i]);
+    this->bdy_values_dirichlet.push_back(bdy_values_dirichlet[i]);
   }
-  if (tm.size() != tv.size()) error("Mismatched numbers of Dirichlet boundary markers and values.");
-  for (unsigned int i = 0; i < tm.size(); i++) this->bc_values.add_const(tm[i], tv[i]);
 }
 
 // Set Neumann boundary markers.
@@ -176,13 +170,11 @@ void ModuleBasic::set_newton_values(const std::vector<double_pair> &bdy_values_n
 }
 
 // Sanity check of material markers and material constants.
-void ModuleBasic::materials_sanity_check()
+void ModuleBasic::sanity_check()
 {
-  if (this->mat_markers.size() != this->c1_array.size()) error("Wrong length of c1 array.");
-  if (this->mat_markers.size() != this->c2_array.size()) error("Wrong length of c2 array.");
-  if (this->mat_markers.size() != this->c3_array.size()) error("Wrong length of c3 array.");
-  if (this->mat_markers.size() != this->c4_array.size()) error("Wrong length of c4 array.");
-  if (this->mat_markers.size() != this->c5_array.size()) error("Wrong length of c5 array.");
+  // Number of Dirichlet values and markers must be the same
+  if (this->bdy_markers_dirichlet.size() != this->bdy_values_dirichlet.size()) 
+    error("Wrong number of Dirichlet markers or values.");
 }
 
 // Get mesh string.
@@ -277,7 +269,7 @@ bool ModuleBasic::create_space_and_forms()
   for (int i = 0; i < this->init_ref_num; i++) this->mesh->refine_all_elements();
 
   // Initialize boundary conditions.
-  Hermes::vector<DefaultEssentialBCConst*> bc_essential_array = ();
+  Hermes::vector<DefaultEssentialBCConst*> bc_essential_array = Hermes::vector<DefaultEssentialBCConst*>();
   for (int i=0; i<bdy_markers_dirichlet.size(); i++) {
     bc_essential_array.push_back(new DefaultEssentialBCConst(bdy_markers_dirichlet[i], bdy_values_dirichlet[i]));
   }
@@ -296,7 +288,7 @@ bool ModuleBasic::create_space_and_forms()
   View::wait();
   */
 
-  // Initialize the weak formulation.
+  // Add all matrix and volume forms into the weak formulation.
   this->wf->create();
 
   return true;
