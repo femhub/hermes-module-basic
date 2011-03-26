@@ -37,6 +37,7 @@ class WeakForm;
 // After that, the problem is solved by calling the method calculate().
 
 typedef std::pair<double, double> double_pair;
+typedef std::map<std::string, double> materials_map;
 
 class HERMES_MODULE_API ModuleBasic {
 public:
@@ -86,7 +87,7 @@ public:
   // Set Newton boundary markers.
   void set_newton_markers(const std::vector<std::string> &bdy_markers_newton);
 
-  // Set Newton boundary value pairs.
+  // Set Newton boundary values.
   void set_newton_values(const std::vector<double_pair> &bdy_values_newton);
 
   // Sanity check.
@@ -146,7 +147,7 @@ protected:
 
   // Matrix solver.
   MatrixSolverType matrix_solver;              // Possibilities: SOLVER_AMESOS, SOLVER_ZATECOO, 
-                                               // SOLVER_MUMPS, SOLVER_PARDISO, SOLVER_PETSC, 
+                                               // SOLVER_MUMPS, SOLVER_PETSC, 
                                                // SOLVER_SUPERLU, SOLVER_UMFPACK.
 
   // Finite element mesh.

@@ -10,7 +10,7 @@
   for (int i = 0; i < n_mat_markers; i++) {
     char tmp[100];
     if(!Get(f, tmp)) error("Could not read a material marker.");
-    info("mat_marker[%d]: %d", i, tmp);
+    info("mat_marker[%d]: %s", i, tmp);
     mat_markers.push_back((std::string)tmp);
   }
   B.set_material_markers(mat_markers);
@@ -73,7 +73,7 @@ Hermes::vector<std::string> bdy_markers_dirichlet;
   for (int i = 0; i < n_bc_dirichlet; i++) {
     char tmp[100];
     if(!Get(f, tmp)) error("Could not read an Dirichlet boundary marker.");
-    info("bdy_markers_dirichlet[%d]: %d", i, tmp);
+    info("bdy_markers_dirichlet[%d]: %s", i, tmp);
     bdy_markers_dirichlet.push_back((std::string)tmp);
   }
   if (n_bc_dirichlet > 0) B.set_dirichlet_markers(bdy_markers_dirichlet);
@@ -96,7 +96,7 @@ Hermes::vector<std::string> bdy_markers_neumann;
   for (int i = 0; i < n_bc_neumann; i++) {
     char tmp[100];
     if(!Get(f, tmp)) error("Could not read a Neumann boundary marker.");
-    info("bdy_markers_neumann[%d]: %d", i, tmp);
+    info("bdy_markers_neumann[%d]: %s", i, tmp);
     bdy_markers_neumann.push_back((std::string)tmp);
   }
   if (n_bc_neumann > 0) B.set_neumann_markers(bdy_markers_neumann);
@@ -119,7 +119,7 @@ Hermes::vector<std::string> bdy_markers_newton;
   for (int i = 0; i < n_bc_newton; i++) {
     char tmp[100];
     if(!Get(f, tmp)) error("Could not read a Newton boundary marker.");
-    info("bdy_markers_newton[%d]: %d", i, tmp);
+    info("bdy_markers_newton[%d]: %s", i, tmp);
     bdy_markers_newton.push_back((std::string)tmp);
   }
   if (n_bc_newton > 0) B.set_newton_markers(bdy_markers_newton);

@@ -1,21 +1,36 @@
 # include "/home/pavel/repos/hermes/hermes2d/src/weakform_library/laplace.h"
 
+#include <map>
+#include <string>
+
+//using namespace Laplace;
+using namespace Laplace::VolumetricMatrixForms;
+using namespace Laplace::VolumetricVectorForms;
+using namespace Laplace::SurfaceMatrixForms;
+using namespace Laplace::SurfaceVectorForms;
+using namespace Laplace::RightHandSides;
+
 /* Weak forms */
 
 // Custom surface vector form for the Neumann condition.
 class CustomVectorFormSurfNeumann : public WeakForm::VectorFormSurf
 {
 public:
-  CustomVectorFormSurfNeumann(int i, double coeff, std::vector<double> c1_array) 
-         : WeakForm::VectorFormSurf(i), coeff(coeff), c1_array(c1_array) { }
-  CustomVectorFormSurfNeumann(int i, std::string area, double coeff, std::vector<double> c1_array) 
-         : WeakForm::VectorFormSurf(i, area), coeff(coeff), c1_array(c1_array) { }
+  CustomVectorFormSurfNeumann(int i, double neumenn_coeff, materials_map c1_pairs) 
+         : WeakForm::VectorFormSurf(i), neumann_coeff(neumann_coeff), c1_pairs(c1_pairs) { }
+  CustomVectorFormSurfNeumann(int i, std::string area, double neumann_coeff, materials_map c1_pairs) 
+         : WeakForm::VectorFormSurf(i, area), neumann_coeff(neumann_coeff), c1_pairs(c1_pairs) { }
 
   template<typename Real, typename Scalar>
   Scalar vector_form_surf(int n, double *wt, Func<Scalar> *u_ext[], 
                           Func<Real> *v, Geom<Real> *e, ExtData<Scalar> *ext) {
-    int mat_marker = e->elem_marker;
-    return c1_array[mat_marker] * coeff * int_v<Real, Scalar>(n, wt, v);
+    double c1;
+    if (e->elem_marker == -9999) c1 = 1.0;         // Automatic order determination.
+    else {
+      std::string marker = get_elem_marker(e);
+      c1 = c1_pairs[marker];
+    }
+    return c1 * neumann_coeff * int_v<Real, Scalar>(n, wt, v);
   }
 
   scalar value(int n, double *wt, Func<scalar> *u_ext[], Func<double> *v, 
@@ -28,23 +43,29 @@ public:
   }
 
 private:
-  double coeff;
-  std::vector<double> c1_array;
+  double neumann_coeff;
+  materials_map c1_pairs;
 };
 
 class CustomMatrixFormSurfNewton : public WeakForm::MatrixFormSurf
 {
 public:
-  CustomMatrixFormSurfNewton(int i, int j, double coeff, std::vector<double> c1_array) 
-        : WeakForm::MatrixFormSurf(i, j), coeff(coeff), c1_array(c1_array) { }
-  CustomMatrixFormSurfNewton(int i, int j, std::string area, double coeff, std::vector<double> c1_array) 
-        : WeakForm::MatrixFormSurf(i, j, area), coeff(coeff), c1_array(c1_array) { }
+  CustomMatrixFormSurfNewton(int i, int j, double newton_coeff, materials_map c1_pairs
+) 
+        : WeakForm::MatrixFormSurf(i, j), newton_coeff(newton_coeff), c1_pairs(c1_pairs) { }
+  CustomMatrixFormSurfNewton(int i, int j, std::string area, double newton_coeff, materials_map c1_pairs) 
+        : WeakForm::MatrixFormSurf(i, j, area), newton_coeff(newton_coeff), c1_pairs(c1_pairs) { }
 
   template<typename Real, typename Scalar>
   Scalar matrix_form_surf(int n, double *wt, Func<Scalar> *u_ext[], Func<Real> *u, 
                           Func<Real> *v, Geom<Real> *e, ExtData<Scalar> *ext) {
-    int mat_marker = e->elem_marker;
-    return c1_array[mat_marker] * coeff * int_u_v<Real, Scalar>(n, wt, u, v);
+    double c1;
+    if (e->elem_marker == -9999) c1 = 1.0;         // Automatic order determination.
+    else {
+      std::string marker = get_elem_marker(e);
+      c1 = c1_pairs[marker];
+    }
+    return c1 * newton_coeff * int_u_v<Real, Scalar>(n, wt, u, v);
   }
 
   scalar value(int n, double *wt, Func<scalar> *u_ext[], Func<double> *u, Func<double> *v, 
@@ -58,23 +79,28 @@ public:
   }
 
 private:
-  double coeff;
-  std::vector<double> c1_array;
+  double newton_coeff;
+  materials_map c1_pairs;
 };
 
 class CustomVectorFormSurfNewton : public WeakForm::VectorFormSurf
 {
 public:
-  CustomVectorFormSurfNewton(int i, double coeff, std::vector<double> c1_array) 
-    : WeakForm::VectorFormSurf(i), coeff(coeff), c1_array(c1_array) { }
-  CustomVectorFormSurfNewton(int i, std::string area, double coeff, std::vector<double> c1_array) 
-         : WeakForm::VectorFormSurf(i, area), coeff(coeff), c1_array(c1_array) { }
+  CustomVectorFormSurfNewton(int i, double newton_coeff, materials_map c1_pairs) 
+    : WeakForm::VectorFormSurf(i), newton_coeff(newton_coeff), c1_pairs(c1_pairs) { }
+  CustomVectorFormSurfNewton(int i, std::string area, double newton_coeff, materials_map c1_pairs) 
+         : WeakForm::VectorFormSurf(i, area), newton_coeff(newton_coeff), c1_pairs(c1_pairs) { }
 
   template<typename Real, typename Scalar>
   Scalar vector_form_surf(int n, double *wt, Func<Scalar> *u_ext[], 
                           Func<Real> *v, Geom<Real> *e, ExtData<Scalar> *ext) {
-    int mat_marker = e->elem_marker;
-    return c1_array[mat_marker] * coeff * int_v<Real, Scalar>(n, wt, v);
+    double c1;
+    if (e->elem_marker == -9999) c1 = 1.0;         // Automatic order determination.
+    else {
+      std::string marker = get_elem_marker(e);
+      c1 = c1_pairs[marker];
+    }
+    return c1 * newton_coeff * int_v<Real, Scalar>(n, wt, v);
   }
 
   scalar value(int n, double *wt, Func<scalar> *u_ext[], Func<double> *v, 
@@ -87,15 +113,31 @@ public:
   }
 
 private:
-  double coeff;
-  std::vector<double> c1_array;
+  double newton_coeff;
+  materials_map c1_pairs;
 };
 
 // Weak formulation with all matrix and surface forms.
 class CustomWeakFormModuleBasic : public WeakForm
 {
 public:
-  CustomWeakFormModuleBasic() : WeakForm(1) { };
+  CustomWeakFormModuleBasic() : WeakForm(1) { 
+    // Material markers.
+    this->mat_markers = std::vector<std::string>();
+    // Equation constants.
+    this->c1_array = std::vector<double>();
+    this->c2_array = std::vector<double>();
+    this->c3_array = std::vector<double>();
+    this->c4_array = std::vector<double>();
+    this->c5_array = std::vector<double>();
+    // Natural boundary conditions.
+    this->bdy_markers_neumann = std::vector<std::string>();
+    this->bdy_values_neumann = std::vector<double>();
+    this->bdy_markers_newton = std::vector<std::string>();
+    this->bdy_values_newton = std::vector<double_pair>();
+    // Map to link material markers with c1_array constants. 
+    this->c1_pairs = std::map<std::string, double>();
+  };
 
   // Set material markers.
   void set_material_markers(const std::vector<std::string> &mat_markers)
@@ -198,25 +240,32 @@ public:
 
   // Register all volumetric and surface forms.
   void create() {
+    // Merge material markers and c1_array into a map (needed for surface forms).
+    for (unsigned int i=0; i < mat_markers.size(); i++) {
+      c1_pairs[mat_markers[i]] = c1_array[i];
+    }
+
     // First add volumetric forms for all material markers.
     for (unsigned int i=0; i<this->mat_markers.size(); i++) {
       add_matrix_form(new DefaultMatrixFormStiffness(0, 0, this->mat_markers[i], this->c1_array[i]));
       add_matrix_form(new DefaultMatrixFormMass(0, 0, this->mat_markers[i], this->c4_array[i]));
       add_matrix_form(new DefaultMatrixFormAdvection(0, 0, this->mat_markers[i], 
 						     this->c2_array[i], this->c3_array[i]));
-      add_vector_form(new DefaultVectorFormVolConst(0, this->mat_markers[i], this->c5_array[i]));
+      add_vector_form(new DefaultVectorFormConst(0, this->mat_markers[i], this->c5_array[i]));
     }
 
     // Add surface vector forms for all Neumann markers.
     for (unsigned int i=0; i<this->bdy_markers_neumann.size(); i++) {
       add_vector_form_surf(new CustomVectorFormSurfNeumann(0, this->bdy_markers_neumann[i], 
-                                                           this->bdy_values_neumann[i], this->c1_array));
+                                                           this->bdy_values_neumann[i], this->c1_pairs));
     }
 
     // Add surface and matrix forms for all Newton markers.
     for (unsigned int i=0; i<this->bdy_markers_newton.size(); i++) {
-      add_matrix_form_surf(new CustomMatrixFormSurfNewton(0, 0, this->bdy_markers_newton[i], this->bdy_values_newton[i].first, this->c1_array));
-      add_vector_form_surf(new CustomVectorFormSurfNewton(0, this->bdy_markers_newton[i], this->bdy_values_newton[i].second, this->c1_array));
+      add_matrix_form_surf(new CustomMatrixFormSurfNewton(0, 0, this->bdy_markers_newton[i], 
+                           this->bdy_values_newton[i].first, this->c1_pairs));
+      add_vector_form_surf(new CustomVectorFormSurfNewton(0, this->bdy_markers_newton[i], 
+                           this->bdy_values_newton[i].second, this->c1_pairs));
     }
   }
 
@@ -230,111 +279,11 @@ public:
     std::vector<double> c4_array;                // Equation parameter c4 (array for all material subdomains).
     std::vector<double> c5_array;                // Equation parameter c5 (array for all material subdomains).
     // Natural boundary conditions.
-    std::vector<std::string> bdy_markers_neumann;      // List of Neumann boundary markers.
+    std::vector<std::string> bdy_markers_neumann;     // List of Neumann boundary markers.
     std::vector<double> bdy_values_neumann;           // List of Neumann boundary values.
     std::vector<std::string> bdy_markers_newton;      // List of Newton boundary markers.
     std::vector<double_pair> bdy_values_newton;       // List of Newton boundary value pairs.
+    // Map to link material markers with c1_array constants. 
+    materials_map c1_pairs;
 };
 
-  /* OLD CODE - TO BE REMOVED
-
-// Weak form (volumetric, right-hand side).
-template<typename Real, typename Scalar>
-Scalar linear_form_vol(int n, double *wt, Func<Real> *u_ext[], Func<Real> *v, 
-                       Geom<Real> *e, ExtData<Scalar> *ext)
-{
-  int elem_marker = e->elem_marker;
-  double c5;
-  if (elem_marker < 0) {
-    // This is for Order calculation only:
-    c5 = -5555.0;
-  } else {
-    // FIXME: these global arrays need to be removed.
-    int index = _global_mat_markers.find_index(elem_marker);
-    c5 = _global_c5_array[index];
-  }
-  return c5 * int_v<Real, Scalar>(n, wt, v);
-}
-
-// Weak form (surface, left-hand side).
-template<typename Real, typename Scalar>
-Scalar bilinear_form_surf_newton(int n, double *wt, Func<Real> *u_ext[], Func<Real> *u, Func<Real> *v, 
-                          Geom<Real> *e, ExtData<Scalar> *ext)
-{
-  int edge_marker = e->edge_marker;
-  int elem_marker = e->elem_marker;
-  double const_newton_1;
-  double c1;
-  if (edge_marker < 0) {
-    // This is for Order calculation only:
-    const_newton_1 = -5555.0;
-    c1 = -5555.0;
-  } else {
-    // FIXME: these global arrays need to be removed.
-    if (_global_bdy_values_newton.size() > 0) {
-      double_pair newton_pair = _global_bdy_values_newton[_global_bc_types->find_index_newton(edge_marker)];
-      const_newton_1 = newton_pair.first;
-    }
-    else error("Internal in ModuleBasic: bilinear_form_surf_newton() should not have been called.");
-    // FIXME: these global arrays need to be removed.
-    c1 = _global_c1_array[_global_mat_markers.find_index(elem_marker)];
-  }
-  return c1 * const_newton_1 * int_u_v<Real, Scalar>(n, wt, u, v);
-}
-
-// Weak form (surface, neumann, right-hand side).
-template<typename Real, typename Scalar>
-Scalar linear_form_surf_neumann(int n, double *wt, Func<Real> *u_ext[], Func<Real> *v, 
-                        Geom<Real> *e, ExtData<Scalar> *ext)
-{
-  int edge_marker = e->edge_marker;
-  int elem_marker = e->elem_marker;
-  double const_neumann;
-  double c1;
-  double result = 0;
-  if (edge_marker < 0) {
-    // This is for Order calculation only:
-    const_neumann = -5555.0;
-    c1 = -5555.0;
-  } else {
-    // FIXME: these global arrays need to be removed.
-    if (_global_bdy_values_neumann.size() > 0) {
-      int index = _global_bc_types->find_index_neumann(edge_marker);
-      const_neumann = _global_bdy_values_neumann[index];
-    }
-    else error("Internal in ModuleBasic: linear_form_surf_neumann() should not have been called.");
-    // FIXME: these global arrays need to be removed.
-    c1 = _global_c1_array[_global_mat_markers.find_index(elem_marker)];  
-  }
-  return c1 * const_neumann * int_v<Real, Scalar>(n, wt, v);
-}
-
-// Weak form (surface, newton, right-hand side).
-template<typename Real, typename Scalar>
-Scalar linear_form_surf_newton(int n, double *wt, Func<Real> *u_ext[], Func<Real> *v, 
-                        Geom<Real> *e, ExtData<Scalar> *ext)
-{
-  int edge_marker = e->edge_marker;
-  int elem_marker = e->elem_marker;
-  double const_newton_2;
-  double c1;
-  double result = 0;
-  if (edge_marker < 0) {
-    // This is for Order calculation only:
-    const_newton_2 = -5555.0;
-    c1 = -5555.0;
-  } else {
-    // FIXME: these global arrays need to be removed.
-    if (_global_bdy_values_newton.size() > 0) {
-      int index = _global_bc_types->find_index_newton(edge_marker);
-      double_pair newton_pair = _global_bdy_values_newton[index];
-      const_newton_2 = newton_pair.second;
-    }
-    else error("Internal in ModuleBasic: linear_form_surf_newton() should not have been called.");
-    // FIXME: these global arrays need to be removed.
-    c1 = _global_c1_array[_global_mat_markers.find_index(elem_marker)];  
-  }
-  return c1 * const_newton_2 * int_v<Real, Scalar>(n, wt, v);
-}
-
-  */

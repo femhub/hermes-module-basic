@@ -26,7 +26,6 @@ ModuleBasic::ModuleBasic()
   this->mesh_str = "";
   this->init_ref_num = -1;
   this->init_p = -1;
-  this->mat_markers = std::vector<std::string>();
   this->bdy_markers_dirichlet = std::vector<std::string>();
   this->bdy_values_dirichlet = std::vector<double>();
   this->matrix_solver = SOLVER_UMFPACK;
@@ -269,7 +268,7 @@ bool ModuleBasic::create_space_and_forms()
   for (int i = 0; i < this->init_ref_num; i++) this->mesh->refine_all_elements();
 
   // Initialize boundary conditions.
-  Hermes::vector<EssentialBC*> bc_essential_array = Hermes::vector<EssentialBC*>();
+  Hermes::vector<EssentialBoundaryCondition*> bc_essential_array = Hermes::vector<EssentialBoundaryCondition*>();
   for (unsigned int i=0; i<bdy_markers_dirichlet.size(); i++) {
     bc_essential_array.push_back(new DefaultEssentialBCConst(bdy_markers_dirichlet[i], bdy_values_dirichlet[i]));
   }
