@@ -3,7 +3,6 @@
 #include <map>
 #include <string>
 
-//using namespace Laplace;
 using namespace Laplace::VolumetricMatrixForms;
 using namespace Laplace::VolumetricVectorForms;
 using namespace Laplace::SurfaceMatrixForms;
