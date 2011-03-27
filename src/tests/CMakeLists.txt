@@ -9,4 +9,4 @@ project(test-module-basic)
       set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "${RELEASE_FLAGS}")
   endif(DEBUG)
 
- add_test(test-module-basic ${PROJECT_NAME} model.cfg)
+ add_test(test-module-basic ${PROJECT_NAME} ./model.cfg)

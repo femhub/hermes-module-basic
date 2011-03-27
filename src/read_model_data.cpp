@@ -69,7 +69,7 @@
   int n_bc_dirichlet;
   if(!Get(f, &n_bc_dirichlet)) error("Could not read number of Dirichlet boundary markers.");
   info("n_bc_dirichlet: %d", n_bc_dirichlet);
-Hermes::vector<std::string> bdy_markers_dirichlet;
+  Hermes::vector<std::string> bdy_markers_dirichlet;
   for (int i = 0; i < n_bc_dirichlet; i++) {
     char tmp[100];
     if(!Get(f, tmp)) error("Could not read an Dirichlet boundary marker.");

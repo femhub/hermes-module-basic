@@ -280,8 +280,8 @@ bool ModuleBasic::create_space_and_forms()
   info("ndof = %d", ndof);
   if (ndof <= 0) return false;
 
-  // Debug.
   /*
+  // Debug.
   BaseView b("", new WinGeom(0, 0, 400, 400));
   b.show(this->space);
   View::wait();

@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
   /*** READ MESH (TEMPORARILY AS A STRING )***/
 
   // Convert mesh string into mesh, and check its correctness.
-   bool mesh_ok = B.set_mesh_str("\na = 1.0  # size of the mesh\nb = sqrt(2)/2\n\nvertices =\n{\n  { 0, -a },    # vertex 0\n  { a, -a },    # vertex 1\n  { -a, 0 },    # vertex 2\n  { 0, 0 },     # vertex 3\n  { a, 0 },     # vertex 4\n  { -a, a },    # vertex 5\n  { 0, a },     # vertex 6\n  { a*b, a*b }  # vertex 7\n}\n\nelements =\n{\n  { 0, 1, 4, 3, 0 },  # quad 0\n  { 3, 4, 7, 0 },     # tri 1\n  { 3, 7, 6, 0 },     # tri 2\n  { 2, 3, 6, 5, 0 }   # quad 3\n}\n\nboundaries =\n{\n  { 0, 1, 1 },\n  { 1, 4, 2 },\n  { 3, 0, 4 },\n  { 4, 7, 2 },\n  { 7, 6, 2 },\n  { 2, 3, 4 },\n  { 6, 5, 2 },\n  { 5, 2, 3 }\n}\n\ncurves =\n{\n  { 4, 7, 45 },  # +45 degree circular arcs\n  { 7, 6, 45 }\n}\n");
+  bool mesh_ok = B.set_mesh_str("\na = 1.0  # size of the mesh\nb = sqrt(2)/2\n\nvertices =\n{\n  { 0, -a },    # vertex 0\n  { a, -a },    # vertex 1\n  { -a, 0 },    # vertex 2\n  { 0, 0 },     # vertex 3\n  { a, 0 },     # vertex 4\n  { -a, a },    # vertex 5\n  { 0, a },     # vertex 6\n  { a*b, a*b }  # vertex 7\n}\n\nelements =\n{\n  { 0, 1, 4, 3, \"Steel\" },  # quad 0\n  { 3, 4, 7, \"Steel\" },     # tri 1\n  { 3, 7, 6, \"Steel\" },     # tri 2\n  { 2, 3, 6, 5, \"Steel\" }   # quad 3\n}\n\nboundaries =\n{\n  { 0, 1, \"Bottom\" },\n  { 1, 4, \"Outer\" },\n  { 3, 0, \"Inner\" },\n  { 4, 7, \"Outer\" },\n  { 7, 6, \"Outer\" },\n  { 2, 3, \"Inner\" },\n  { 6, 5, \"Outer\" },\n  { 5, 2, \"Left\" }\n}\n\ncurves =\n{\n  { 4, 7, 45 },  # +45 degree circular arcs\n  { 7, 6, 45 }\n}\n");
   if(!mesh_ok) error("No elements found in mesh.");
 
   /*** READ DATA - GENERAL ***/
@@ -83,12 +83,12 @@ int main(int argc, char* argv[])
   ScalarView gradview("Gradient", new WinGeom(445, 0, 440, 350));
   MagFilter grad(Hermes::vector<MeshFunction *>(&sln, &sln), Hermes::vector<int>(H2D_FN_DX, H2D_FN_DY));
   gradview.show_mesh(false);
-  gradview.show(&grad);
+  gradview.show(&grad, HERMES_EPS_NORMAL);
 
   // Space.
   Mesh m;
   EssentialBCs bcs;
-  H1Space space(B.get_mesh(), &bcs, 1);   // FIXME: this is a hack since constructor 
+  H1Space space(B.get_mesh(), &bcs, init_p);   // FIXME: this is a hack since constructor 
                                           // to Space needs some mesh. The mesh is not used.
   B.get_space(&space);
   OrderView oview("Mesh", new WinGeom(890, 0, 440, 350));
