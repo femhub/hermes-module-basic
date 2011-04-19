@@ -26,19 +26,6 @@ public:
   double c1, c2, c3, c4, c5;
 };
 
-/* BasicBoundaryData */
-
-class BasicBoundaryData : public BoundaryDataH1 {
-public:
-  BasicBoundaryData(std::string marker, BoundaryConditionType type, scalar value, BoundaryConditionTypeH1 h1_type = DIRICHLET, scalar value2 = 0.0) :
-    BoundaryDataH1(marker, type, value, h1_type), value2(value2) { }
-
-  BasicBoundaryData(Hermes::vector<std::string> markers, BoundaryConditionType type, scalar value, BoundaryConditionTypeH1 h1_type = DIRICHLET, scalar value2 = 0.0) :
-    BoundaryDataH1(markers, type, value, h1_type), value2(value2) { }
-
-  double value2;
-};
-
 /* ModuleBasic */
 
 class ModuleBasic : public HermesModule {
@@ -48,9 +35,9 @@ public:
 
   virtual void set_boundary(BasicBoundaryData *boundary) {
     if(boundary->type == ESSENTIAL)
-      this->essential_boundaries.push_back(dynamic_cast<BasicBoundaryData *>(boundary));
+      this->essential_boundaries.push_back(dynamic_cast<BoundaryData *>(boundary));
     else if (boundary->type == NATURAL)
-      this->natural_boundaries.push_back(dynamic_cast<BasicBoundaryData *>(boundary));
+      this->natural_boundaries.push_back(dynamic_cast<BoundaryData *>(boundary));
   }
 
   void set_material(BasicMaterialData *material) {
@@ -58,32 +45,33 @@ public:
   }
 
   virtual void set_weakform() {
+
     /* Boundary conditions */
+
     for (unsigned int i = 0; i < this->essential_boundaries.size(); i++)
     {
-      BasicBoundaryData *boundary = dynamic_cast<BasicBoundaryData *>(this->essential_boundaries.at(i));
+      BoundaryDataH1 *boundary = dynamic_cast<BoundaryDataH1 *>(this->essential_boundaries.at(i));
 
-      if (boundary->type == ESSENTIAL)
-        if (boundary->is_constant())
-        {
-          DefaultEssentialBCConst bc(boundary->markers, boundary->value);
-          this->bcs.add_boundary_condition(&bc);
-        }
+      DefaultEssentialBCConst bc(boundary->markers, boundary->value1);
+      this->bcs.add_boundary_condition(&bc);
+    }
+    for (unsigned int i = 0; i < natural_boundaries.size(); i++)
+    {
+      if (boundary->h1_type == HERMES_NEUMANN)
+        WeakFormModuleBasic::add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers,
+                                                                            boundary->value1));
       else
-        if (boundary->h1_type == NEUMANN)
-          WeakFormModuleBasic::add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers,
-                                                                              boundary->value));
-        else if (boundary->h1_type == NEWTON)
-        {
-          WeakFormModuleBasic::add_matrix_form_surf(new DefaultMatrixFormSurf(0, 0, boundary->markers,
-                                                                              boundary->value));
-          WeakFormModuleBasic::add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers,
-                                                                              boundary->value2));
-        }
+      {
+        WeakFormModuleBasic::add_matrix_form_surf(new DefaultMatrixFormSurf(0, 0, boundary->markers,
+                                                                            boundary->value1));
+        WeakFormModuleBasic::add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers,
+                                                                            boundary->value2));
+      }
     }
 
     /* Materials */
-    for (int i = 0; i < this->materials.size(); i++)
+
+    for (unsigned int i = 0; i < this->materials.size(); i++)
     {
       BasicMaterialData *material = dynamic_cast<BasicMaterialData *>(materials.at(i));
 

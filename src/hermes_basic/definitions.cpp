@@ -1,4 +1,4 @@
-# include "/home/pavel/repos/hermes/hermes2d/src/weakform_library/laplace.h"
+# include "/home/pavel/repos/hermes/hermes2d/src/weakform_library/h1.h"
 
 #include <map>
 #include <string>
