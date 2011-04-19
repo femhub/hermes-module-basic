@@ -35,7 +35,7 @@ ENDIF (WITH_PYTHON)
 if(WITH_UMFPACK)
     include_directories(${UMFPACK_INCLUDE_DIR})
 endif(WITH_UMFPACK)
-	
+
 if(WITH_PETSC)
     include_directories(${PETSC_INCLUDE_DIR})
 endif(WITH_PETSC)
