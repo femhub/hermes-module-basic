@@ -21,7 +21,7 @@ ADD_MSVC_BUILD_FLAGS(${MODULE_LIB} ${MODULE_LIB} ${MODULE_LIB}-debug)
 LIBRARY_LINK_SETTINGS(${MODULE_LIB})
 LIBRARY_INSTALL_SETTINGS(${MODULE_LIB})
 
-#add_executable(${PROJECT_NAME} main.cpp utils/disc.cpp)
+add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} ${MODULE_LIB})
 
 if(WITH_TESTS)

@@ -1,4 +1,4 @@
-project(module-basic)
+project(hermes-module-basic)
 
 cmake_minimum_required(VERSION 2.6)
 

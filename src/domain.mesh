@@ -1,0 +1,22 @@
+a = 1.0
+
+vertices =
+{
+  { 0, 0 },
+  { a, 0 },
+  { a, a },
+  { 0, a }
+}
+
+elements =
+{
+  { 0, 1, 2, 3, "Area" }
+}
+
+boundaries =
+{
+  { 0, 1, "Bottom" },
+  { 1, 2, "Right" },
+  { 2, 3, "Upper" },
+  { 3, 1, "Left" }
+}

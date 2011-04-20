@@ -1,9 +1,11 @@
-#include "../../hermes/hermes2d/src/hermes_module.h"
-#include "../../hermes/hermes2d/src/hermes2d.h"
-#include "../../hermes/hermes2d/src/weakform_library/h1.h"
+#include "hermes2d.h"
+
+#include "/home/fmach/hpfem.org/hermes/hermes2d/src/hermes_module.h"
+#include "/home/fmach/hpfem.org/hermes/hermes2d/src/weakform_library/h1.h"
 
 using namespace WeakFormsH1::VolumetricMatrixForms;
 using namespace WeakFormsH1::VolumetricVectorForms;
+using namespace WeakFormsH1::SurfaceMatrixForms;
 using namespace WeakFormsH1::SurfaceVectorForms;
 
 /* WeakFormModuleBasic */
@@ -30,18 +32,23 @@ public:
 
 class ModuleBasic : public HermesModule {
 public:
-  virtual void set_mesh(const std::string &mesh_string) {
+  virtual void set_meshes() {
+    Mesh mesh;
+    H2DReader mloader;
+    mloader.load("domain.mesh", &mesh);
+
+    this->meshes.push_back(&mesh);
   }
 
-  virtual void set_boundary(BasicBoundaryData *boundary) {
-    if(boundary->type == ESSENTIAL)
-      this->essential_boundaries.push_back(dynamic_cast<BoundaryData *>(boundary));
-    else if (boundary->type == NATURAL)
-      this->natural_boundaries.push_back(dynamic_cast<BoundaryData *>(boundary));
+  virtual void set_boundary(BoundaryData *boundary) {
+    BCTypeH1 bc_type_h1 = static_cast<BoundaryDataH1*>(boundary)->bc_type_h1;
+    if(bc_type_h1 == HERMES_DIRICHLET)
+      this->essential_boundaries.push_back(boundary);
+    else
+      this->natural_boundaries.push_back(boundary);
   }
 
-  void set_material(BasicMaterialData *material) {
-    this->materials.push_back(dynamic_cast<MaterialData *>(material));
+  virtual void set_spaces() {
   }
 
   virtual void set_weakform() {
@@ -50,14 +57,19 @@ public:
 
     for (unsigned int i = 0; i < this->essential_boundaries.size(); i++)
     {
-      BoundaryDataH1 *boundary = dynamic_cast<BoundaryDataH1 *>(this->essential_boundaries.at(i));
+      BoundaryDataH1 *boundary = dynamic_cast<BoundaryDataH1*>(this->essential_boundaries.at(i));
 
       DefaultEssentialBCConst bc(boundary->markers, boundary->value1);
       this->bcs.add_boundary_condition(&bc);
     }
-    for (unsigned int i = 0; i < natural_boundaries.size(); i++)
+
+    for (unsigned int i = 0; i < this->natural_boundaries.size(); i++)
     {
-      if (boundary->h1_type == HERMES_NEUMANN)
+      BoundaryDataH1 *boundary = dynamic_cast<BoundaryDataH1*>(this->essential_boundaries.at(i));
+
+      /*
+      FIXME
+      if (boundary->bc_type_h1 == HERMES_NEUMANN)
         WeakFormModuleBasic::add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers,
                                                                             boundary->value1));
       else
@@ -67,19 +79,22 @@ public:
         WeakFormModuleBasic::add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers,
                                                                             boundary->value2));
       }
+      */
     }
 
     /* Materials */
-
     for (unsigned int i = 0; i < this->materials.size(); i++)
     {
       BasicMaterialData *material = dynamic_cast<BasicMaterialData *>(materials.at(i));
 
+      /*
+      FIXME
       Hermes::vector<std::string> markers = material->markers;
       WeakFormModuleBasic::add_matrix_form(new DefaultLinearDiffusion(0, 0, markers, material->c1));
       WeakFormModuleBasic::add_matrix_form(new DefaultLinearMass(0, 0, markers, material->c2));
       WeakFormModuleBasic::add_matrix_form(new DefaultLinearAdvection(0, 0, markers, material->c2, material->c3));
       WeakFormModuleBasic::add_vector_form(new DefaultVectorFormConst(0, markers, material->c5));
+      */
     }
   }
 };
