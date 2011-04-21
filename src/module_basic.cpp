@@ -32,13 +32,6 @@ public:
 
 class ModuleBasic : public HermesModule {
 public:
-  virtual void set_meshes() {
-    Mesh mesh;
-    H2DReader mloader;
-    mloader.load("domain.mesh", &mesh);
-    this->meshes.push_back(&mesh);
-  }
-
   virtual void set_boundary(BoundaryData *boundary) {
     BCTypeH1 bc_type_h1 = static_cast<BoundaryDataH1*>(boundary)->bc_type_h1;
     if(bc_type_h1 == HERMES_DIRICHLET)
@@ -48,8 +41,8 @@ public:
   }
 
   virtual void set_spaces() {
-    //for (int i = 0; i < this->properties()->solution()->num_sol; i++)
-      //this->spaces.push_back(new H1Space(this->meshes.at(i), &this->bcs, properties()->mesh()->init_deg));
+    for (int i = 0; i < this->properties()->solution()->num_sol; i++)
+      this->spaces.push_back(new H1Space(this->meshes.at(i), &this->bcs, properties()->mesh()->init_deg));
   }
 
   virtual void set_boundary_conditions() {
@@ -60,7 +53,6 @@ public:
       DefaultEssentialBCConst bc(boundary->markers, boundary->value1);
       this->bcs.add_boundary_condition(&bc);
     }
-
     for (unsigned int i = 0; i < this->natural_boundaries.size(); i++)
     {
       BoundaryDataH1 *boundary = dynamic_cast<BoundaryDataH1*>(this->essential_boundaries.at(i));
