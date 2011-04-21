@@ -2,7 +2,9 @@
 
 int main(int argc, char* argv[]) {
   ModuleBasic Basic;
+
   Basic.set_meshes();
+  //printf("Nodes: %d\n", Basic.meshes.at(0)->get_num_nodes());
 
   BoundaryDataH1 dirichlet("Bottom", HERMES_DIRICHLET, 1);
   Basic.set_boundary(&dirichlet);
@@ -12,12 +14,14 @@ int main(int argc, char* argv[]) {
   BasicMaterialData material("Arrea", 1, 4, 7, 2, 45);
   Basic.set_material(&material);
 
-  MeshView mview("Mesh", new WinGeom(0, 0, 350, 350));
-  mview.show(Basic.meshes.at(0));
+  //MeshView mview("Mesh", new WinGeom(0, 0, 350, 350));
+  //mview.show(Basic.meshes.at(0));
 
-  //Basic.solve();
+  Basic.solve();
 
   //ScalarView view("Solution", new WinGeom(0, 0, 440, 350));
   //view.show(Basic.meshes.at(0), HERMES_EPS_HIGH);
   //View::wait();
+
+  return 0;
 }

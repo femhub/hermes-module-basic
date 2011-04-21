@@ -1,6 +1,6 @@
 #include "hermes2d.h"
 
-#include "/home/fmach/hpfem.org/hermes/hermes2d/src/hermes_module.h"
+#include "/home/fmach/hpfem.org/hermes/hermes2d/src/hermes_module.cpp"
 #include "/home/fmach/hpfem.org/hermes/hermes2d/src/weakform_library/h1.h"
 
 using namespace WeakFormsH1::VolumetricMatrixForms;
@@ -36,7 +36,6 @@ public:
     Mesh mesh;
     H2DReader mloader;
     mloader.load("domain.mesh", &mesh);
-
     this->meshes.push_back(&mesh);
   }
 
@@ -49,12 +48,11 @@ public:
   }
 
   virtual void set_spaces() {
+    //for (int i = 0; i < this->properties()->solution()->num_sol; i++)
+      //this->spaces.push_back(new H1Space(this->meshes.at(i), &this->bcs, properties()->mesh()->init_deg));
   }
 
-  virtual void set_weakform() {
-
-    /* Boundary conditions */
-
+  virtual void set_boundary_conditions() {
     for (unsigned int i = 0; i < this->essential_boundaries.size(); i++)
     {
       BoundaryDataH1 *boundary = dynamic_cast<BoundaryDataH1*>(this->essential_boundaries.at(i));
@@ -81,8 +79,9 @@ public:
       }
       */
     }
+  }
 
-    /* Materials */
+  virtual void set_weakforms() {
     for (unsigned int i = 0; i < this->materials.size(); i++)
     {
       BasicMaterialData *material = dynamic_cast<BasicMaterialData *>(materials.at(i));
