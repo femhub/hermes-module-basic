@@ -7,15 +7,15 @@ int main(int argc, char* argv[]) {
   H2DReader mloader;
   mloader.load("domain.mesh", &mesh);
 
-  Basic.set_mesh(&mesh);
+  Basic.add_mesh(&mesh);
 
   BoundaryDataH1 dirichlet(Hermes::vector<std::string>("Bottom", "Upper"), HERMES_DIRICHLET, 1);
-  Basic.set_boundary(&dirichlet);
+  Basic.add_boundary(&dirichlet);
   BoundaryDataH1 neumann(Hermes::vector<std::string>("Right", "Left"), HERMES_NEUMANN, 5);
-  Basic.set_boundary(&neumann);
+  Basic.add_boundary(&neumann);
 
   BasicMaterialData material("Arrea", 1, 4, 7, 2, 10);
-  Basic.set_material(&material);
+  Basic.add_material(&material);
 
   MeshView mview("Mesh", new WinGeom(0, 0, 350, 350));
   mview.show(Basic.get_mesh(0));
