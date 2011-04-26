@@ -9,19 +9,19 @@ int main(int argc, char* argv[]) {
 
   Basic.add_mesh(&mesh);
 
-  BoundaryDataH1 dirichlet(Hermes::vector<std::string>("Bottom", "Upper"), HERMES_DIRICHLET, 1);
-  Basic.add_boundary(&dirichlet);
-  BoundaryDataH1 neumann(Hermes::vector<std::string>("Right", "Left"), HERMES_NEUMANN, 5);
-  Basic.add_boundary(&neumann);
+  Basic.add_boundary(new BoundaryDataH1(Hermes::vector<std::string>("Bottom", "Right", "Upper", "Left"), HERMES_DIRICHLET, 0));
+  //Basic.add_boundary(new BoundaryDataH1(Hermes::vector<std::string>("Right", "Left"), HERMES_NEUMANN, 5));
+  Basic.add_material(new BasicMaterialData("Area", 1, 4, 7, 2, 10));
 
-  BasicMaterialData material("Arrea", 1, 4, 7, 2, 10);
-  Basic.add_material(&material);
-
-  MeshView mview("Mesh", new WinGeom(0, 0, 350, 350));
-  mview.show(Basic.get_mesh(0));
-  View::wait();
+  //MeshView mview("Mesh", new WinGeom(0, 0, 350, 350));
+  //mview.show(Basic.get_mesh(0));
+  //mview::wait();
 
   Basic.solve();
+
+  //BaseView bview("Space", new WinGeom(0, 0, 350, 350));
+  //bview.show(Basic.get_space(0));
+  //bview.wait();
 
   //ScalarView view("Solution", new WinGeom(0, 0, 440, 350));
   //view.show(Basic.meshes.at(0), HERMES_EPS_HIGH);
