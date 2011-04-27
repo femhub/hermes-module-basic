@@ -1,12 +1,9 @@
 #include "hermes2d.h"
 
-#include "/home/fmach/hpfem.org/hermes/hermes2d/src/hermes_module.cpp"
-#include "/home/fmach/hpfem.org/hermes/hermes2d/src/weakform_library/h1.h"
+#include "hermes_module.h"
+#include "weakform_library/h1.h"
 
-using namespace WeakFormsH1::VolumetricMatrixForms;
-using namespace WeakFormsH1::VolumetricVectorForms;
-using namespace WeakFormsH1::SurfaceMatrixForms;
-using namespace WeakFormsH1::SurfaceVectorForms;
+using namespace WeakFormsH1;
 
 /* BasicMaterialData */
 
