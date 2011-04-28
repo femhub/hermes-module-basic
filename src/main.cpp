@@ -1,30 +1,46 @@
+#define HERMES_REPORT_ALL
 #include "module_basic.cpp"
 
 int main(int argc, char* argv[]) {
-  ModuleBasic Basic;
 
   Mesh mesh;
   H2DReader mloader;
   mloader.load("domain.mesh", &mesh);
 
+  // Create the module.
+  ModuleBasic Basic;
+
+  // Pass mesh pointer.
   Basic.add_mesh(&mesh);
 
-  Basic.add_boundary(new BoundaryDataH1(Hermes::vector<std::string>("Bottom", "Right", "Upper", "Left"), HERMES_DIRICHLET, 0));
-  //Basic.add_boundary(new BoundaryDataH1(Hermes::vector<std::string>("Right", "Left"), HERMES_NEUMANN, 5));
-  Basic.add_material(new BasicMaterialData("Area", 1, 4, 7, 2, 10));
+  // Define Dirichlet boundaries.
+  Basic.add_boundary(new BoundaryDataH1(Hermes::vector<std::string>("Bottom", "Upper"), 
+                                        HERMES_DIRICHLET, 0.0));
 
-  //MeshView mview("Mesh", new WinGeom(0, 0, 350, 350));
-  //mview.show(Basic.get_mesh(0));
-  //mview::wait();
+  // Define Neumann boundaries.
+  Basic.add_boundary(new BoundaryDataH1(Hermes::vector<std::string>("Right", "Left"), HERMES_NEUMANN, 5.0));
 
-  Basic.solve();
+  // Define materials.
+  Basic.add_material(new BasicMaterialData("Area", 1.0, 4.0, 7.0, 2.0, 10.0));
 
-  //BaseView bview("Space", new WinGeom(0, 0, 350, 350));
-  //bview.show(Basic.get_space(0));
-  //bview.wait();
+  MeshView mview("Mesh", new WinGeom(0, 0, 350, 350));
+  mview.show(Basic.get_mesh(0));
+  mview.wait();
 
-  //ScalarView view("Solution", new WinGeom(0, 0, 440, 350));
-  //view.show(Basic.meshes.at(0), HERMES_EPS_HIGH);
+  std::string message_out;
+  bool success = Basic.solve(message_out);
+  printf("%s", message_out);
+  if (success == false) {
+    error("Computation failed.");
+  }
+
+  BaseView bview("Space", new WinGeom(0, 0, 350, 350));
+  bview.show(Basic.get_space(0));
+  bview.wait();
+
+  ScalarView view("Solution", new WinGeom(0, 0, 440, 350));
+  view.show(Basic.get_solution(0), HERMES_EPS_HIGH);
+  view.wait();
 
   return 0;
 }

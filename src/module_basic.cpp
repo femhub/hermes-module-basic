@@ -9,11 +9,11 @@ using namespace WeakFormsH1;
 
 class BasicMaterialData : public MaterialData {
 public:
-  BasicMaterialData(std::string marker, double c1, double c2, double c3, double c4, double c5) :
-    MaterialData(marker), c1(c1), c2(c2), c3(c3), c4(c4), c5(c5) { }
+  BasicMaterialData(std::string marker, double c1, double c2, double c3, double c4, double c5) 
+    : MaterialData(marker), c1(c1), c2(c2), c3(c3), c4(c4), c5(c5) { }
 
-  BasicMaterialData(Hermes::vector<std::string> markers, double c1, double c2, double c3, double c4, double c5) :
-    MaterialData(markers), c1(c1), c2(c2), c3(c3), c4(c4), c5(c5) { }
+  BasicMaterialData(Hermes::vector<std::string> markers, double c1, double c2, double c3, double c4, double c5) 
+    : MaterialData(markers), c1(c1), c2(c2), c3(c3), c4(c4), c5(c5) { }
 
   double c1, c2, c3, c4, c5;
 };
@@ -44,10 +44,8 @@ public:
     delete wf;
   }
 
-  virtual void set_weakforms() {
-    this->wf = new WeakForm(this->properties()->solution()->num_sol);
-
-    /* BCs */
+  virtual void set_essential_bcs() 
+  {
     for (unsigned int i = 0; i < this->boundaries.size(); i++)
     {
       BoundaryDataH1 *boundary = dynamic_cast<BoundaryDataH1*>(this->boundaries.at(i));
@@ -57,41 +55,59 @@ public:
         //printf("Dirichlet BC (%d/%d); %f\n", i+1, this->boundaries.size(), boundary->value1);
         this->bcs.add_boundary_condition(new DefaultEssentialBCConst(boundary->markers, boundary->value1));
       }
-      else
-      {
-        // FIXME
-        if (boundary->bc_type_h1 == HERMES_NEUMANN)
-        {
-          //printf("NEUMANN BC (%d/%d); %f\n", i+1, this->boundaries.size(), boundary->value1);
-          this->wf->add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers, boundary->value1));
-        }
-
-        if (boundary->bc_type_h1 == HERMES_NEWTON)
-        {
-          //printf("NEWTON BC (%d/%d); %f, %f\n", i+1, this->boundaries.size(), boundary->value1, boundary->value2);
-          this->wf->add_matrix_form_surf(new DefaultMatrixFormSurf(0, 0, boundary->markers, boundary->value1));
-          this->wf->add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers, boundary->value2));
-        }
-      }
     }
+  }
 
-    /* Materials */
+  virtual void set_weakforms() {
+    this->wf = new WeakForm(this->properties()->solution()->num_sol);
+
+    // Volumetric forms.
     for (unsigned int i = 0; i < this->materials.size(); i++)
     {
       BasicMaterialData *material = dynamic_cast<BasicMaterialData *>(materials.at(i));
 
       Hermes::vector<std::string> markers = material->markers;
+
+      // Jacobian.
       this->wf->add_matrix_form(new DefaultJacobianDiffusion(0, 0, markers, material->c1));
-      this->wf->add_matrix_form(new DefaultMatrixFormVol(0, 0, markers, material->c2));
-      this->wf->add_matrix_form(new DefaultJacobianAdvection(0, 0, markers, material->c2)); // FIXME (material->c3)
+      this->wf->add_matrix_form(new DefaultJacobianAdvection(0, 0, markers, material->c2, material->c3));
+      this->wf->add_matrix_form(new DefaultMatrixFormVol(0, 0, markers, material->c4));
+
+      // Residual.
       this->wf->add_vector_form(new DefaultResidualDiffusion(0, markers, material->c1));
-      this->wf->add_vector_form(new DefaultResidualVol(0, markers, material->c2));
-      this->wf->add_vector_form(new DefaultResidualAdvection(0, markers, material->c2)); // FIXME (material->c3)
-      this->wf->add_vector_form(new DefaultVectorFormVol(0, markers, material->c5));
+      this->wf->add_vector_form(new DefaultResidualAdvection(0, markers, material->c2, material->c3));
+      this->wf->add_vector_form(new DefaultResidualVol(0, markers, material->c4));
+      this->wf->add_vector_form(new DefaultVectorFormVol(0, markers, -material->c5));
+    }
+
+    // Surface forms due to natural boundary conditions.
+    for (unsigned int i = 0; i < this->boundaries.size(); i++)
+    {
+      BoundaryDataH1 *boundary = dynamic_cast<BoundaryDataH1*>(this->boundaries.at(i));
+
+      if (boundary->bc_type_h1 == HERMES_NEUMANN)
+      {
+        //printf("NEUMANN BC (%d/%d); %f\n", i+1, this->boundaries.size(), boundary->value1);
+
+        // Residual.
+        this->wf->add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers, boundary->value1));
+      }
+
+      if (boundary->bc_type_h1 == HERMES_NEWTON)
+      {
+        //printf("NEWTON BC (%d/%d); %f, %f\n", i+1, this->boundaries.size(), boundary->value1, boundary->value2);
+
+        // Jacobian.
+        this->wf->add_matrix_form_surf(new DefaultMatrixFormSurf(0, 0, boundary->markers, boundary->value1));
+
+        // Residual.
+        this->wf->add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers, -boundary->value2));
+      }
     }
   }
 
   virtual void set_spaces() {
-    this->spaces.push_back(new H1Space(this->get_mesh(0), &this->bcs, this->properties()->mesh()->init_deg));
+    H1Space* space = new H1Space(this->get_mesh(0), &this->bcs, this->properties()->mesh()->init_deg);
+    this->spaces.push_back(space);
   }
 };
