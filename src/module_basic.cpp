@@ -9,10 +9,10 @@ using namespace WeakFormsH1;
 
 class BasicMaterialData : public MaterialData {
 public:
-  BasicMaterialData(std::string marker, double c1, double c2, double c3, double c4, double c5) 
+  BasicMaterialData(std::string marker, double c1, double c2, double c3, double c4, double c5)
     : MaterialData(marker), c1(c1), c2(c2), c3(c3), c4(c4), c5(c5) { }
 
-  BasicMaterialData(Hermes::vector<std::string> markers, double c1, double c2, double c3, double c4, double c5) 
+  BasicMaterialData(Hermes::vector<std::string> markers, double c1, double c2, double c3, double c4, double c5)
     : MaterialData(markers), c1(c1), c2(c2), c3(c3), c4(c4), c5(c5) { }
 
   double c1, c2, c3, c4, c5;
@@ -26,6 +26,7 @@ public:
     this->properties()->geometry = HERMES_PLANAR;
     this->properties()->analysis = HERMES_STEADY_STATE;
     this->properties()->mesh()->init_deg = 1;
+    this->properties()->solver()->jacobian_changed = true;
     this->properties()->solver()->mat_solver = SOLVER_UMFPACK;
     this->properties()->solver()->newton_max_iter = 100;
     this->properties()->solver()->newton_tol = 1e-6;
@@ -44,7 +45,7 @@ public:
     delete wf;
   }
 
-  virtual void set_essential_bcs() 
+  virtual void set_essential_bcs()
   {
     for (unsigned int i = 0; i < this->boundaries.size(); i++)
     {
@@ -52,7 +53,6 @@ public:
 
       if (boundary->bc_type == HERMES_ESSENTIAL)
       {
-        //printf("Dirichlet BC (%d/%d); %f\n", i+1, this->boundaries.size(), boundary->value1);
         this->bcs.add_boundary_condition(new DefaultEssentialBCConst(boundary->markers, boundary->value1));
       }
     }
@@ -87,16 +87,12 @@ public:
 
       if (boundary->bc_type_h1 == HERMES_NEUMANN)
       {
-        //printf("NEUMANN BC (%d/%d); %f\n", i+1, this->boundaries.size(), boundary->value1);
-
         // Residual.
         this->wf->add_vector_form_surf(new DefaultVectorFormSurf(0, boundary->markers, boundary->value1));
       }
 
       if (boundary->bc_type_h1 == HERMES_NEWTON)
       {
-        //printf("NEWTON BC (%d/%d); %f, %f\n", i+1, this->boundaries.size(), boundary->value1, boundary->value2);
-
         // Jacobian.
         this->wf->add_matrix_form_surf(new DefaultMatrixFormSurf(0, 0, boundary->markers, boundary->value1));
 
