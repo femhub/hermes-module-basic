@@ -11,8 +11,13 @@ set(HERMES_ROOT /home/pavel/build/hermes)
 
 # Enable the C++ version of your module:
 set(WITH_CXX      YES)
+
+# Enable tests.
+set(WITH_TESTS      YES)
+
 # Enable the module's Python wrapper. 
 set(WITH_PYTHON   YES)
+
 # If the required Python wrappers of the Hermes2D library have not been
 # found in the standard directories (${HERMES_ROOT}/lib/python/hermes2d, 
 # Python's system directory for modules and some others), you will have
@@ -20,8 +25,8 @@ set(WITH_PYTHON   YES)
 #
 #   set(HERMES_PYTHON_WRAPPERS_DIR  <home directory of hermes2d.pxd>
 
-# Enable the JavaScript version of your module:
-set(WITH_UI       NO)
+# Enable the JavaScript version of the module:
+set(WITH_UI       YES)
 
 
 #------------------------   INSTALLATION   --------------------------
